@@ -1,0 +1,52 @@
+﻿{% extends "base_site.html" %}
+{% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/changelists.css{% endblock %}
+{% block coltype %}flex{% endblock %}
+{% block bodyclass %}change-list{% endblock %}
+{% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../../">{% trans "Home" %}</a> &rsaquo; 规格电子流</div>{% endblock %}{% endif %}
+{% block content %}
+
+<div id="content-main">
+<div class="module filtered" id="changelist">
+	
+<div id="changelist-filter">
+<h2>说明</h2>
+<h3> 说明 </h3>
+<ul>
+    <li>暂时没有说明</li>
+</ul>
+
+
+</div>
+	
+<table cellspacing="0">
+	<thead>
+		<tr>
+			<th>提交者</th>
+			<th>SpecId文件</th>
+			<th>idNumbers</th>
+			<th>maxId</th>
+                        <th>提交时间</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for o in spec_records %}
+			<tr class="{% cycle row1,row2 %}">
+			<th>{{o.submitter}}</a></th>
+			<td>{{o.specIdFile}}</td>
+			<td>{{o.idNumbers}}</td>
+			<td>{{o.maxId}}</td>
+			<td>{{o.submitTime}}</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+
+<p class="paginator">
+&nbsp;
+</p>
+</div>
+</div>
+
+{% endblock %}

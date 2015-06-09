@@ -1,0 +1,73 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/forms.css{% endblock %}
+{% block coltype %}flex{% endblock %}
+{% block bodyclass %}change-list{% endblock %}
+{% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../">{% trans "Home" %}</a> &rsaquo; 用户</div>{% endblock %}{% endif %}
+{% block content %}
+<div id="content-main">
+
+<form action="" method="post" id="site_form">
+<div>
+
+
+
+   <fieldset class="module aligned ()">
+    
+    
+    
+        
+<div class="form-row" >
+
+
+  <label for="id_domain" class="required">域名:</label> 
+  <input type="text" id="id_domain" class="vTextField required" name="domain" size="30" value="" maxlength="100" />
+
+  
+  
+
+</div>
+
+        
+            
+        
+    
+        
+<div class="form-row" >
+
+
+  <label for="id_name" class="required">显示名称:</label> 
+  <input type="text" id="id_name" class="vTextField required" name="name" size="30" value="" maxlength="50" />
+
+  
+  
+
+</div>
+
+        
+            
+        
+    
+   </fieldset>
+
+
+
+
+
+<div class="submit-row">
+
+
+<input type="submit" value="保存并增加另一个" name="_addanother"  />
+<input type="submit" value="保存并继续编辑" name="_continue" />
+<input type="submit" value="保存" class="default" />
+</div>
+
+
+   <script type="text/javascript">document.getElementById("id_domain").focus();</script>
+
+
+</div>
+</form>	
+    
+</div>
+{% endblock %}

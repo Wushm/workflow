@@ -1,0 +1,54 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/forms.css{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectBox.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectFilter2.js"></script>
+{% endblock %}
+{% block coltype %}colM{% endblock %}
+{% block bodyclass %}auth-group change-form{% endblock %}
+{% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="/">{% trans "Home" %}</a> &rsaquo; <a href="../"> 用户 </a>&rsaquo; 
+{% if add %}{% trans "Add" %} 组 {% else %}{{ original|truncatewords:"18" }}{% endif %}
+</div>{% endblock %}{% endif %}
+{% block content %}
+<div id="content-main">
+	<form action="" method="post">
+		<div>
+			{% if error_message %}
+			<p class="errornote">
+			{{error_message}}
+			</p>
+			{% endif %}
+			<fieldset class="module aligned ()">
+				<div class="form-row" >
+					<label class="required">用户名:</label> 
+					{{form.username}}
+					{% if form.username.errors %}<span style="color: #FF0000;"> *** {{ form.username.errors|join:", " }}</span>{% endif %}
+				</div>
+				
+				<div class="form-row" >
+					<label class="required">E-Mail:</label> 
+					{{form.email}}
+					{% if form.email.errors %}<span style="color: #FF0000;"> *** {{ form.email.errors|join:", " }}</span>{% endif %}
+				</div>
+								
+<div class="form-row" >
+  <label for="id_groups">组:</label> 
+{{form.groups}}
+{% if form.groups.errors %}<span style="color: #FF0000;"> *** {{ form.groups.errors|join:", " }}</span>{% endif %}
+  <p class="help"> 按下 "Control"，或者在Mac上按 "Command" 来选择多个值。</p>
+</div>
+            <script type="text/javascript">addEvent(window, "load", function(e) { SelectFilter.init("id_groups", "组", 0, "{% admin_media_prefix %}"); });</script>
+			</fieldset>
+<div style="display:none">{{form.groups_nochange}}</div>
+			<div class="submit-row">
+				<input type="submit" value="保存" class="default" />
+			</div>
+			<script type="text/javascript">document.getElementById("id_username").focus();</script>
+		</div>
+	</form>	
+</div>
+{% endblock %}

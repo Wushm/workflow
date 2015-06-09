@@ -1,0 +1,170 @@
+﻿{% extends "base_site.html" %}
+{% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/forms.css{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectBox.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectFilter2.js"></script>
+{% endblock %}
+{% block coltype %}colM{% endblock %}
+{% block bodyclass %}auth-group change-form{% endblock %}
+{% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../../">{% trans "Home" %}</a> &rsaquo; <a href="../../../"> review 信息电子流 </a>&rsaquo;添加review信息
+{% if add %}{% trans "Add" %} review 信息电子流 {% else %}{{ original|truncatewords:"18" }}{% endif %}
+</div>{% endblock %}{% endif %}
+{% block content %}
+<div id="content-main">
+<script>
+  function check(){
+    if(document.getElementById('id_reviewer1').value.length == 0){
+      alert("请填写reviewer1");
+      return false;
+    }
+    if(document.getElementById('id_reviewer2').value.length > 0){
+      if(document.getElementById('id_reviewer2_energy').value.length == 0){
+        alert("请填写reviewer2的投入度");
+        return false;
+      }
+    }
+    if(document.getElementById('id_reviewer3').value.length > 0){
+      if(document.getElementById('id_reviewer3_energy').value.length == 0){
+        alert("请填写reviewer3的投入度");
+        return false;
+      }
+    }
+    if(document.getElementById('id_totalTime').value.length == 0){
+      alert("请选择review花费时间");
+      return false;
+    }
+    if(document.getElementById('id_mrRootCause').value.length == 0){
+      alert("请选择MR root cause");
+      return false;
+    }
+    if(document.getElementById('id_isLeadInto').value.length == 0){
+      alert("请选择MR是否修改引入");
+      return false;
+    }
+    if(document.getElementById('id_module').value.length == 0){
+      alert("请选择MR所属模块");
+      return false;
+    }
+    if(document.getElementById('id_questionNum').value.length > 0){
+      val = document.getElementById('id_questionNum').value;
+      if(isNaN(val)){
+        alert("review中发现的问题数必须是数字");
+        return false;
+      }
+      if(val !="0" && document.getElementById('id_questionDecr').value.length == 0){
+        alert("请填写review中发现的问题");
+        return false;
+      }
+    }
+    return true;
+  }
+</script>
+
+<div>
+  
+<div class="module" id="changelist-filter">
+  <h2>说明</h2>
+  <ul>
+    <li>标红<font color="red"><b>(*)</b></font>的选项必须选</li>
+    <li>reviewer2或reviewer3选择后，必须选择对应的参与度</li>
+  </ul>
+</div>
+
+<form action="" method="post" id="review_form" enctype="multipart/form-data" onsubmit="return check();">
+<fieldset class="module aligned ()">
+<table width="100%">
+  <tr>
+    <td>
+      <label>MR:</label>{{mrs_submitter.mrs}}
+    </td>
+    <td  style="display:none">
+      {{form.workflow_id}}
+      {{form.mrs}}
+      {{form.submitter}}
+      {{form.team}}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label> submitter:</label> {{mrs_submitter.submitter}}
+    </td>
+    <td>
+      <label> team:</label> {{mrs_submitter.team}}
+    </td>
+  </tr>
+    <td>
+      <label> reviewer1:</label> 
+      {{form.reviewer1}}<font color="red"><b>*</b></font>
+    </td>
+    <td>
+      <label> reviewer2:</label> 
+      {{form.reviewer2}}
+    </td>
+    <td>
+      <label> 参与度:</label> 
+      {{form.reviewer2_energy}}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label> total cost time(hour):</label> 
+      {{form.totalTime}}<font color="red"><b>*</b></font>
+    </td>
+    <td>
+      <label> reviewer3:</label> 
+      {{form.reviewer3}}
+    </td>
+    <td>
+      <label> 参与度:</label> 
+      {{form.reviewer3_energy}}
+    </td>
+  </tr>
+   <tr>
+    <td>
+      <label> MR root cause:</label> 
+      {{form.mrRootCause}}<font color="red"><b>*</b></font>
+    </td>
+    <td>
+      <label> 是否修改引入:</label> 
+      {{form.isLeadInto}}<font color="red"><b>*</b></font>
+    </td>
+    <td>
+      <label> Feature:</label> 
+      {{form.module}}<font color="red"><b>*</b></font>
+    </td>
+  </tr>
+   <tr>
+    <td>
+      <label> MR原因描述:</label>
+      {{form.reasonDecription}}
+      {{form.errors.ext_bugs|safe}}
+    </td>
+  </tr>
+  <tr>
+    <td><label>Found Problems num:</label>{{form.questionNum}} </td>
+  </tr>
+  <tr>
+    <td><label>发现问题（是否改正）:</label>
+    {{form.questionDecr}}
+    <br/>
+  </tr>
+  <tr>
+    <td>
+      <label> Risk:</label>
+      {{form.risk}}
+      {{form.errors.ext_bugs|safe}}
+    </td>
+  </tr>
+  </table>
+</form>
+
+<div class="submit-row">
+  <input type="submit" value="Save" name="save"/>
+</div>
+
+</div>
+{% endblock %}

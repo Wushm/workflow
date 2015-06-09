@@ -1,0 +1,2 @@
+cd..
+manage.py runserver

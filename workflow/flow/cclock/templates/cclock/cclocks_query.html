@@ -1,0 +1,57 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/forms.css{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectBox.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectFilter2.js"></script>
+{% endblock %}
+{% block coltype %}colM{% endblock %}
+{% block bodyclass %}auth-group change-form{% endblock %}
+{% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../">{% trans "Home" %}</a> &rsaquo; <a href="../../"> ClearCase Lock 改动电子流 </a>&rsaquo;根据规则查询审核请求
+{% if add %}{% trans "Add" %} ClearCase Lock 改动电子流 {% else %}{{ original|truncatewords:"18" }}{% endif %}
+</div>{% endblock %}{% endif %}
+{% block content %}
+<div id="content-main">
+
+{% load cclock_filters %}
+{% load cclock_tags %}
+<form action="" method="post" id="prjreport_form" enctype="multipart/form-data">
+<div>
+	<fieldset class="module aligned ()">
+		<div class="form-row" >
+			<label class="">提交者工号</label> 
+			{{form.submitter_name}}
+			{{form.errors.submitter_name}}
+		</div>
+	</fieldset>
+	<fieldset class="module aligned ()">
+		<div class="form-row" >
+			<label class="">审核人工号</label> 
+			{{form.approver_name}}
+			{{form.errors.approver_name}}
+		</div>
+	</fieldset>
+	<fieldset class="module aligned ()">
+		<div class="form-row" >
+			<label class="">MR ID</label> 
+			{{form.mr_id}}
+			{{form.errors.mr_id}}
+		</div>
+	</fieldset>
+	<fieldset class="module aligned ()">
+		<div class="form-row" >
+			<label class="">Vob branch</label> 
+			{{form.vob_branch}}
+			{{form.errors.vob_branch}}
+		</div>
+	</fieldset>
+	<div class="submit-row">
+		<input type="submit" value="查询" class="default" />
+	</div>
+</div>
+</div>
+</form>
+{% endblock %}

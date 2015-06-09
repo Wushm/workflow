@@ -1,0 +1,260 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/forms.css{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectBox.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectFilter2.js"></script>
+{% endblock %}
+{% block coltype %}colM{% endblock %}
+{% block bodyclass %}auth-group change-form{% endblock %}
+{% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../">{% trans "Home" %}</a> &rsaquo; <a href="../../"> CC上新建文件 </a>&rsaquo; 
+{% if add %}{% trans "Add" %} 规格ID申请 {% else %}{{ original|truncatewords:"18" }}{% endif %}
+</div>{% endblock %}{% endif %}
+{% block content %}
+<div id="content-main">
+<div class="module" id="changelist-filter">
+  <h2>说明</h2>
+  <ul>
+    <li>点击“增加一个文件”的按钮，则增加一行</li>
+    <li>填写的文件名或者目录名必须是<font color="red">从OnsPlatform的子目录开始的完整路径</font>，如doc\testcase, spec\cmm\xxxx.ts, product\ptn\chss\oam\src\phy\xxxx.cpp</li>
+    <li>如果输入的完整路径最后的文件名含“.”，则是文件，否则是目录。如doc\testcase是目录，spec\cmm\xxxx.ts是文件</li>
+    <li>当输入文件名的输入框出现<font color="red">"spec\cmm\"</font>关键字时，应该是在cmm目录下加入规格文件，则输入框的右边会出现多选框可以选择是否要增加链接文件</li>
+    <li>目前不支持只添加链接文件，如果只是添加链接文件，请联系Zhao Shixin</li>
+    <li>添加文件后退回，由于有的浏览器不会保留下拉框所选项的值，如果要继续操作，请重新选择下拉框中对应的分支</li>
+  </ul>
+</div>
+<form action="" method="post" id="prjreport_form" enctype="multipart/form-data" onsubmit="return check();">
+<div>
+<fieldset class="module aligned ()">
+<div class="form-row" >
+  <label> 申请者：</label> 
+  {{submitter}}
+</div>
+<div class="form-row" >
+  <label> MR：</label> 
+  {{form.mrs}}
+</div>
+<div  style="display:none">
+      {{form.submitter}}
+      {{form.new_file_list}}
+      {{form.link_file_list}}
+</div>
+<div class="form-row" >
+  <label> 分  支：</label> 
+  {{form.vob_branch}}
+</div>
+</fieldset>
+<fieldset class="module aligned ()">
+<div class="form-row" >
+<input type=button value=增加一个文件 onclick="tableAddRow(tableId);" />
+<table id="tableId">
+   <tr bgcolor="#E1F0C4">
+    <td>需要添加的文件</td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;链接到哪些产品</td>
+   </tr>
+</table>
+</div>
+</fieldset>
+<script>
+var productDir = new Array();
+
+var branch_obj = document.getElementById("id_vob_branch");
+if(branch_obj)
+{
+  if(window.attachEvent) // IE 
+  {
+    document.getElementById("id_vob_branch").attachEvent("onchange", branch_change);
+  }
+  else // Mozilla, Netscape, Firefox 
+  {
+    document.getElementById("id_vob_branch").addEventListener("change",
+      function ()
+      {
+        branch_change();
+      }, false);
+  }
+
+  function branch_change()
+  {
+    var val = document.getElementById("id_vob_branch").value;
+    if(val.indexOf('OnsPlatform')>=0)
+    {
+      branch = val.substring(0, val.length-13);
+      old_productDir = productDir;
+    
+      if(branch == "TN7X5_SBB_V1.2.0_Dev")
+      {
+        productDir = new Array('tn705', 'tn725');
+      }
+      else if(branch == "TN705_V1.3.2.14_branch")
+      {
+        productDir = new Array('tn765');
+      }
+      else if(branch == "TN7xx_Universe_Unification_Base")
+      {
+        productDir = new Array('tn701', 'tn703', 'tn703c', 'tn703c_old', 'tn705', 'tn725');
+      }
+      else if(branch == "TN7xx_V2.2.2.4")
+      {
+        productDir = new Array('tn703', 'tn703c', 'tn705', 'tn725');
+      }
+      else if(branch == "TN7xx_V2.2.3.x")
+      {
+        productDir = new Array('tn701', 'tn703', 'tn703c', 'tn705', 'tn725');
+      }
+      else if(branch == "TN735_DEV1")
+      {
+        productDir = new Array('tn735');
+      }
+      else if(branch == "TN705_V1.5.0.6_maintain")
+      {
+        productDir = new Array('tn705');
+      }
+      else if(branch == "TN705_SBB_Private_svcoam")
+      {
+        productDir = new Array('tn705');
+      }
+      else if(branch == "725E_dev")
+      {
+        productDir = new Array('tn705','tn725');
+      }
+    }
+    else
+    {
+      productDir = new Array();
+    }
+    
+    if(productDir.sort().toString() == old_productDir.sort().toString())
+    {
+      ;
+    }
+    else
+    {
+      //如果checkbox已经显示，则更改checkbox的显示
+      var table = document.getElementById("tableId");  
+      var rows = table.getElementsByTagName("tr");  
+      for(i = 1; i < rows.length; i++)  
+      {
+        if(document.getElementsByName('cbx'+i).length != 0)
+        {
+          rows[i].deleteCell(1);
+          col = rows[i].insertCell(1);
+          for(j=0; j<productDir.length; j++)
+          {
+            col.innerHTML += '&nbsp;&nbsp;<input name="cbx'+i+'" value="cbx'+i+'_'+productDir[j]+'" type="checkbox">&nbsp;&nbsp;'+productDir[j]+'';
+          }
+        }
+      }
+    }
+  }
+}
+
+
+function tableAddRow(tableName)
+{
+  var row = tableName.insertRow(tableName.rows.length);  //行对象
+  var i = tableName.rows.length - 1; //table原有的行数
+  var col;  //列对象
+ 
+  if(i > 10)
+  {
+    alert("最多一次加10个文件，如果超过10个文件，请提交后再提请求！");
+    return;
+  }
+   
+  if(tableName==tableId)
+  {
+    col = row.insertCell(0);
+    col.innerHTML = '<input name="file'+i+'" id="file'+i+'" size="80" oninput="checkLinkFile(this.value, '+i+')" onpropertychange="checkLinkFile(this.value, '+i+')" type="text">';
+  }
+}
+
+function checkLinkFile(filename, i)
+{
+  linkfile = false;
+  
+  if(filename.indexOf('spec\\cmm\\') >= 0 )
+  {
+    //alert("contain 'spec\\cmm\\'");
+    linkfile = true;
+  }
+  
+  if(linkfile)
+  {
+    if(document.getElementsByName('cbx'+i).length == 0)
+    {
+      var table = document.getElementById("tableId");  
+      var rows = table.getElementsByTagName("tr");  
+       
+      col = rows[i].insertCell(1);
+      for(j=0; j<productDir.length; j++)
+      {
+        col.innerHTML += '&nbsp;&nbsp;<input name="cbx'+i+'" id="cbx'+i+'_'+productDir[j]+'" type="checkbox">&nbsp;&nbsp;'+productDir[j]+'';
+      }
+    }
+  }
+  else
+  {
+    if(document.getElementsByName('cbx'+i) != null)
+    {
+      var table = document.getElementById("tableId");  
+      var rows = table.getElementsByTagName("tr");  
+      rows[i].deleteCell(1);
+    }
+  }
+}
+
+function check()
+{
+    if(document.getElementById('id_mrs').value.length == 0){
+      alert("请输入对应的MR号");
+      return false;
+    }
+    if(document.getElementById('id_vob_branch').value.length == 0){
+      alert("请选择在哪个分支上添加空文件");
+      return false;
+    }
+    
+    var table = document.getElementById("tableId");  
+    var rowCount = table.getElementsByTagName("tr").length;
+    var filelist = "";
+    var linkfile_list = "";
+    
+    for(i = 1; i < rowCount; i++)  
+    {
+      filename = document.getElementById('file'+i).value
+      filelist += filename;
+      filelist += ";";
+      
+      cbx = document.getElementsByName('cbx'+i);
+      for(var j=0;j<cbx.length;j++)
+      {
+        if(cbx[j].checked==true)
+        {
+          linkfile = "";
+          if(filename.indexOf("cmm") >= 0)
+          {
+            linkfile = filename.replace("cmm", productDir[j]);
+          }
+           
+          linkfile_list += linkfile;
+          linkfile_list += ";";
+        }
+      }
+    }
+    //alert(filelist);
+    //alert(linkfile_list);
+    
+    document.getElementById('id_new_file_list').value = filelist;
+    document.getElementById('id_link_file_list').value = linkfile_list;
+    return true;
+}
+</script>
+<input type="submit" value="保存" class="default" />
+<script type="text/javascript">document.getElementById("id_mrs").focus();</script>
+</form>
+</div>
+{% endblock %}

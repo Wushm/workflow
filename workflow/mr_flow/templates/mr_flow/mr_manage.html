@@ -1,0 +1,30 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/changelists.css{% endblock %}
+{% block coltype %}flex{% endblock %}
+{% block bodyclass %}change-list{% endblock %}
+{% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../">{% trans "Home" %}</a> &rsaquo; MR管理电子流</div>{% endblock %}{% endif %}
+{% block content %}
+<div id="content-main">
+
+{% load cclock_filters %}
+{% load cclock_tags%}
+	<div class="module">
+	<table>
+		<tr>
+			<th scope="row"><a href="edit/">新建一个MR</a></th>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<th scope="row"><a href="query/">查询自己建立的MR</a></th>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+	</div>
+</div>
+
+{% endblock %}

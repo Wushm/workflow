@@ -1,0 +1,212 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/forms.css{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectBox.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectFilter2.js"></script>
+{% endblock %}
+{% block coltype %}colM{% endblock %}
+{% block bodyclass %}auth-group change-form{% endblock %}
+{% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../../">{% trans "Home" %}</a> &rsaquo; <a href="../"> ClearCase Lock 改动电子流 </a>&rsaquo; 
+{% if add %}{% trans "Add" %} ClearCase Lock 改动电子流 {% else %}{{ original|truncatewords:"18" }}{% endif %}
+</div>{% endblock %}{% endif %}
+{% block content %}
+<div id="content-main">
+
+{% load cclock_filters %}
+{% load cclock_tags %}
+
+<script>
+	mr_infos = {{ mr_infos|safe }};
+    approvers={% approvers %};
+    approver_name={% approver_name %};
+    function get_vb_approver(vb) {
+        if (!vb) return "";
+        xs=approvers[vb];
+        help_txt="";
+        for (i=0;i<xs.length;i++) {
+            x=approver_name[xs[i]];
+            help_txt+=x+', ';
+        }
+        return help_txt;
+    }
+    //选择branch时，显示审批人
+    function show_approver(v_b, node) {
+        var v_b=document.getElementById(v_b);
+        var node=document.getElementById(node);
+        v=v_b.value;
+        //如果不为空
+        node.innerHTML=get_vb_approver(v);
+    }
+</script>
+<form action="" method="post" id="prjreport_form" enctype="multipart/form-data">
+<div>
+<fieldset class="module aligned ()">
+<div class="form-row" >
+  <label for="id_title" class="required">标题：</label> 
+  {{form.title}}
+  {{form.errors.title}}
+  <script>
+	  document.getElementById('id_title').value = mr_infos['title'];
+  </script>
+</div>
+<div class="form-row" >
+  <BR><LEFT><BR><label> MR列表：</label>
+  <textarea rows="10" cols="40" name="bugs" id="id_bugs">{{bugs}}</textarea>
+  <script>
+	  document.getElementById('id_bugs').value=mr_infos['mr_id'];
+  </script>
+  {{form.errors.ext_bugs|safe}}
+</div>
+<div class="form-row" >
+    <label class="required"> Vob branch 1：</label> 
+  {{form.vob_branch_1}}
+  <script>
+      //develop@\\TN715
+      document.getElementById('id_vob_branch_1').onclick = function() {
+          if (document.getElementById('id_vob_branch_1').value == 'feat_tn703@\\OnsPlatform' &&
+          document.getElementById('id_descn').value == '') {
+            document.getElementById('init_descn_button').click();
+          }
+      }
+  </script>
+  <p class="help">审批人：<span id="h_b_1"></span></p>
+  {{form.errors.vob_branch_1}}
+</div>
+<div class="form-row" >
+  <label> Vob branch 2：</label> 
+  {{form.vob_branch_2}}
+  <p class="help">审批人：<span id="h_b_2"></span></p>
+  {{form.errors.vob_branch_2}}
+</div>
+<div class="form-row" >
+  <label> Vob branch 3：</label> 
+  {{form.vob_branch_3}}
+  <p class="help">审批人：<span id="h_b_3"></span></p>
+  {{form.errors.vob_branch_3}}
+</div>
+<div class="form-row" >
+  <label> Vob branch 4：</label> 
+  {{form.vob_branch_4}}
+  <p class="help">审批人：<span id="h_b_4"></span></p>
+  {{form.errors.vob_branch_4}}
+</div>
+<div class="form-row" >
+  <label> Vob branch 5：</label> 
+  {{form.vob_branch_5}}
+  <p class="help">审批人：<span id="h_b_5"></span></p>
+  {{form.errors.vob_branch_5}}
+</div>
+<div class="form-row" >
+  <label> Vob branch 6：</label> 
+  {{form.vob_branch_6}}
+  <p class="help">审批人：<span id="h_b_6"></span></p>
+  {{form.errors.vob_branch_6}}
+</div>
+</fieldset>
+
+<fieldset class="module aligned ()">
+<div class="form-row" >
+  <label>描述：</label> 
+  {{form.descn}}
+  {{form.errors.descn}}
+  <input type="button" id='init_descn_button' value="初始化描述" onclick="
+          var mrs = document.getElementById('id_bugs').value;
+		  mrs = mrs.split('\n');
+          var s = '';
+          for (var i=0; i<mrs.length; i++) {
+              if(mrs[i] == ''){
+				continue;
+			  }
+			  s+='MR:' + mrs[i];
+			  if(document.getElementById('id_vob_branch_1').value != '')
+			  	s+='\r\nvob_branch_1: ' + document.getElementById('id_vob_branch_1').value;
+			  if(document.getElementById('id_vob_branch_2').value != '')
+			  	s+='\r\nvob_branch_2: ' + document.getElementById('id_vob_branch_2').value;
+			  if(document.getElementById('id_vob_branch_3').value != '')
+			  	s+='\r\nvob_branch_3: ' + document.getElementById('id_vob_branch_3').value;
+			  if(document.getElementById('id_vob_branch_4').value != '')
+			  	s+='\r\nvob_branch_4: ' + document.getElementById('id_vob_branch_4').value
+			  if(document.getElementById('id_vob_branch_5').value != '')
+			  	s+='\r\nvob_branch_5: ' + document.getElementById('id_vob_branch_5').value
+			  if(document.getElementById('id_vob_branch_6').value != '')
+			  	s+='\r\nvob_branch_6: ' + document.getElementById('id_vob_branch_6').value
+              s+='\r\nModifiers/Reviewers:{{user}}';
+              s+='\r\nProblem caused:';
+              s+='\r\nResolution:';
+	      s+='\r\nSuggest Modules To Be Tested:';
+	      s+='\r\nModified Files:';
+              s+='\r\n\r\n';
+          }
+          document.getElementById('id_descn').value=s;
+          "/>
+  <script>
+      document.getElementById('id_descn').cols=60;
+      document.getElementById('id_descn').rows=15;
+	  document.getElementById('id_descn').value=mr_infos['descn'];
+  </script>
+  <input type="button" value="清空" onclick="
+          document.getElementById('id_descn').value='';
+          "/>
+</div>
+</fieldset>
+
+<fieldset class="module aligned ()">
+<div class="form-row" >
+  <label for="id_title" >附件1：</label> 
+  <input type="file" name="attachment" size="60"></input>
+</div>
+<div class="form-row" >
+  <label>附件2：</label> 
+  <input type="file" name="attachment" size="60"></input>
+</div>
+<div class="form-row" >
+  <label>附件3：</label> 
+  <input type="file" name="attachment" size="60"></input>
+</div>
+</fieldset>
+
+<div class="submit-row">
+{%if original%}
+<p class="float-left">
+<a class="deletelink" href="delete/" onclick="
+if (confirm('确认删除？'))
+return ture;
+else
+return false;    
+    ">删除</a>
+</p>
+{%endif%}
+<input type="submit" value="保存" class="default" />
+</div>
+   <script type="text/javascript">document.getElementById("id_title").focus();</script>
+</div>
+</form>
+
+</div>
+<script>
+	var title = document.getElementById('id_title');
+	title.size=60;
+    show_approver("id_vob_branch_1", "h_b_1");
+    show_approver("id_vob_branch_2", "h_b_2");
+    show_approver("id_vob_branch_3", "h_b_3");
+    show_approver("id_vob_branch_4", "h_b_4");
+    show_approver("id_vob_branch_5", "h_b_5");
+    show_approver("id_vob_branch_6", "h_b_6");
+    id_vob_branch_1=document.getElementById("id_vob_branch_1");
+    id_vob_branch_1.onchange = function(){show_approver("id_vob_branch_1", "h_b_1");};
+    id_vob_branch_2=document.getElementById("id_vob_branch_2");
+    id_vob_branch_2.onchange = function(){show_approver("id_vob_branch_2", "h_b_2");};
+    id_vob_branch_3=document.getElementById("id_vob_branch_3");
+    id_vob_branch_3.onchange = function(){show_approver("id_vob_branch_3", "h_b_3");};
+    id_vob_branch_4=document.getElementById("id_vob_branch_4");
+    id_vob_branch_4.onchange = function(){show_approver("id_vob_branch_4", "h_b_4");};
+    id_vob_branch_5=document.getElementById("id_vob_branch_5");
+    id_vob_branch_5.onchange = function(){show_approver("id_vob_branch_5", "h_b_4");};
+    id_vob_branch_6=document.getElementById("id_vob_branch_6");
+    id_vob_branch_6.onchange = function(){show_approver("id_vob_branch_6", "h_b_6");};
+</script>
+{% endblock %}

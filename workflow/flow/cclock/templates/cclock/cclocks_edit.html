@@ -1,0 +1,439 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/forms.css{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectBox.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectFilter2.js"></script>
+{% endblock %}
+{% block coltype %}colM{% endblock %}
+{% block bodyclass %}auth-group change-form{% endblock %}
+{% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../../">{% trans "Home" %}</a> &rsaquo; <a href="../"> ClearCase Lock 改动电子流 </a>&rsaquo; 
+	{% if add %}{% trans "Add" %} ClearCase Lock 改动电子流 {% else %}{{ original|truncatewords:"18" }}{% endif %}
+</div>{% endblock %}{% endif %}
+{% block content %}
+<div id="content-main">
+
+	{% load cclock_filters %}
+	{% load cclock_tags %}
+
+	<script>
+		approvers={% approvers %};
+		approver_name={% approver_name %};
+		vob_branch_status = {% vob_branch_status %}
+		function get_vb_approver(vb) {
+			if (!vb) return "";
+			xs=approvers[vb];
+			help_txt="";
+			for (i=0;i<xs.length;i++) {
+				x=approver_name[xs[i]];
+				help_txt+=x+', ';
+			}
+			return help_txt;
+		}
+		//选择branch时，显示审批人
+		function show_approver(v_b, node) {
+			var v_b=document.getElementById(v_b);
+			var node=document.getElementById(node);
+			v=v_b.value;
+			//如果不为空
+			node.innerHTML=get_vb_approver(v);
+		}
+		
+		function get_branch_status(vb)
+		{
+		    if (!vb)
+			return "";
+		    status = vob_branch_status[vb]
+		    return status
+		}
+
+		function set_status_style(status,node)
+		{
+		    if(status == 'dev')
+		    {
+			h_b.innerHTML = '开发分支-'  + '请确认此分支是否存在与原始MR相同的问题' ;
+			node.style.color = "red";
+			node.style.fontSize = "xx-large";
+		    }
+		    if(status == 'maintain')
+		    {
+			h_b.innerHTML = '维护分支-' + '请分支管理员确认是否需要合入'
+			node.style.color = "blue";
+			node.style.fontSize = "x-large";
+		    }
+		    
+		    if(status == 'close')
+		    {
+			h_b.innerHTML = '分支已关闭-' + '不需要合入，请分支管理员确认'
+			node.style.color = "black"
+			node.style.fontSize = "large";
+		    }
+		}
+				
+		function vob_branch_h_b_status(vob_branch_number,status)
+		{
+		    var vob_branch_string_numbre = String(vob_branch_number);
+		    var h_b_string = 'h_b_' + vob_branch_string_numbre + '_s';
+		    h_b = document.getElementById(h_b_string)
+		    set_status_style(status,h_b);
+		}
+		
+		function set_input_required(vob_branch_number,status)
+		{
+		    var vob_branch_string_numbre = String(vob_branch_number);
+		    var clone_mr_input = 'vob_branch_' + vob_branch_string_numbre + '_mr_id';
+		    var input = document.getElementById(clone_mr_input);
+		    
+		    if(status == 'dev')
+		    {
+			input.setAttribute("required","required");
+		    }
+		    else if(status == 'maintain')
+		    {
+			input.setAttribute("required","required");
+		    }
+		    else
+		    {
+			input.removeAttribute("required");
+		    }
+		
+		}
+		
+		//选择branch时，显示分支状态
+		function show_branch_status(vob_branch_number)
+		{
+		    
+		    var vob_branch_string_numbre = String(vob_branch_number);
+		    var vob_branch_string = 'id_vob_branch_' + vob_branch_string_numbre;
+		    var vb = document.getElementById(vob_branch_string).value;
+		    //document.getElementById('id_descn').value=vb;
+		    var status = get_branch_status(vb);
+		    vob_branch_h_b_status(vob_branch_number,status);
+		    set_input_required(vob_branch_number,status);
+		}
+		
+		
+		//清楚所有分支选择
+		function clear_all_branch_info()
+		{
+		    var vb_string_id = '';
+		    for (i = 2; i < 7; i++)
+		    {
+			vb_string_id = 'id_vob_branch_';
+			var vob_branch_string_numbre = String(i);
+			vb_string_id = vb_string_id + vob_branch_string_numbre;
+			
+			var objSelect = document.getElementById(vb_string_id);
+			objSelect.selectedIndex = 0;
+			var h_b_string = 'h_b_' + vob_branch_string_numbre + '_s';
+			h_b = document.getElementById(h_b_string)
+			h_b.innerHTML = ''
+		    }
+		}
+				
+		function vob_branch_select_index(vob_branch_numbre,index)
+		{
+		    var vb_string_id = 'id_vob_branch_';
+		    var vob_branch_string_numbre = String(vob_branch_number);
+		    vb_string_id = vb_string_id + vob_branch_string_numbre;
+		    var objSelect = document.getElementById(vb_string_id);
+		    ObjSelect.selectedIndex=i
+		}
+
+		
+		function set_dev_branch(v_b)
+		{
+		    clear_all_branch_info();
+		    //生成第一个产生MR的分支信息
+		    vb = document.getElementById('id_vob_branch_1').value;
+		    var status = get_branch_status(vb);
+		    vob_branch_h_b_status(1,status);
+		    init_dev_branch(vb);
+		}
+		
+		//初始化剩下的Dev
+		function init_dev_branch(vb)
+		{
+		     //获取分支名select长度
+		    var objSelect = document.getElementById('id_vob_branch_1')
+		    var objSelectLength = objSelect.length;
+		    //从vob_branch_2开始
+		    var vob_branch_number = 2;
+		    var vb_string_id = '';
+		    
+		    //遍历所有分支名,第一个不需要遍历
+		    for(i = 1; i < objSelectLength; i++)
+		    {
+			var tmpVb = objSelect.options[i].value;
+			if(tmpVb == vb)
+			    continue;
+			
+			//获取Vob属性
+			status = get_branch_status(tmpVb);
+			if(status == 'dev')
+			{
+			   // document.getElementById('id_descn').value=tmpVb;
+			    if(vob_branch_number > 6)
+				break;
+			    var vob_branch_string_numbre = String(vob_branch_number);
+			    vb_string_id = 'id_vob_branch_' + vob_branch_string_numbre;
+			    var tmpObjSelect = document.getElementById(vb_string_id);
+			    tmpObjSelect.selectedIndex=i;
+			    vob_branch_h_b_status(vob_branch_number,status);
+			    //set_input_required(vob_branch_number,status);
+			    vob_branch_number = vob_branch_number + 1;
+			}
+		    }
+		}
+		
+		//生成描述信息
+		function create_descn_info()
+		{
+		    var mr_s = '';
+		    mr_s += document.getElementById('id_main_mr_id').value + '\n';
+		    mr_s += document.getElementById('id_vob_branch_2_mr_id').value + '\n';
+		    mr_s += document.getElementById('id_vob_branch_3_mr_id').value + '\n';
+		    mr_s += document.getElementById('id_vob_branch_4_mr_id').value + '\n';
+		    mr_s += document.getElementById('id_vob_branch_5_mr_id').value + '\n';
+		    mr_s += document.getElementById('id_vob_branch_6_mr_id').value + '\n';
+		    mrs = mr_s.split('\n');
+		    var s = '';
+		    var bugs = '';
+		    var mr_info = '';
+		    for (var i=0; i<mrs.length; i++)
+		    {
+			if(mrs[i] == '')
+			{
+			    continue;
+			}
+			bugs += mrs[i] + '\n';
+			s+='MR:' + mrs[i];
+			if(document.getElementById('id_vob_branch_1').value != '')
+			    s+='\r\nvob_branch_1: ' + document.getElementById('id_vob_branch_1').value;
+			if(document.getElementById('id_vob_branch_2').value != '')
+			    s+='\r\nvob_branch_2: ' + document.getElementById('id_vob_branch_2').value;
+			if(document.getElementById('id_vob_branch_3').value != '')
+			    s+='\r\nvob_branch_3: ' + document.getElementById('id_vob_branch_3').value;
+			if(document.getElementById('id_vob_branch_4').value != '')
+			    s+='\r\nvob_branch_4: ' + document.getElementById('id_vob_branch_4').value
+			if(document.getElementById('id_vob_branch_5').value != '')
+			    s+='\r\nvob_branch_5: ' + document.getElementById('id_vob_branch_5').value
+			if(document.getElementById('id_vob_branch_6').value != '')
+			s+='\r\nvob_branch_6: ' + document.getElementById('id_vob_branch_6').value
+			s+='\r\nModifiers/Reviewers:{{user}}/'
+			s+='\r\nProblem caused:' 
+			s+='\r\nResolution:' 
+			s+='\r\nSuggest Modules To Be Tested:';
+			s+='\r\nModified Files:';
+			s+='\r\n\r\n';
+		    }
+		    document.getElementById('id_descn').value=s;
+		}
+		
+	</script>
+	<form action="" method="post" id="prjreport_form" enctype="multipart/form-data">
+		<div>
+			<fieldset class="module aligned ()">
+				<div class="form-row" >
+				    <label class="required"> 原始MR号</label>
+					{{form.main_mr_id}}
+				 </div>   
+				<div class="form-row" >
+					<label class="required"> 产生MR的分支</label> 
+					{{form.vob_branch_1}}
+					<script>
+						id_vob_branch_1=document.getElementById("id_vob_branch_1");
+						id_vob_branch_1.onchange = function()
+						{set_dev_branch("id_vob_branch_1");};
+					</script>
+					<p class="help">分支状态：<span id="h_b_1_s"></span></p>
+					{{form.errors.vob_branch_1}}
+				</div>
+				<div class="form-row" >
+					<label> Vob branch 2：</label> 
+					{{form.vob_branch_2}}
+					<p class="help">分支状态：<span id="h_b_2_s"></span></p>
+					<script>
+					    id_vob_branch_2=document.getElementById("id_vob_branch_2");
+					    id_vob_branch_2.onchange = function()
+					    {show_branch_status(2);};
+					</script>
+					<div>
+					<label> 分支2克隆MR：</label> 
+					{{form.vob_branch_2_mr_id}}
+					<input type="button" id='clone_mr_button_2' value="克隆MR" />
+					<script>
+					    clone_mr_button_2=document.getElementById("clone_mr_button_2");
+					    clone_mr_button_2.onclick =
+					    function()
+					    {
+						document.getElementById('id_vob_branch_2_mr_id').value='暂不支持自动clone';
+					    };
+					</script>
+					</div>
+					{{form.errors.vob_branch_2}}
+				</div>
+				<div class="form-row" >
+					<label> Vob branch 3：</label> 
+					{{form.vob_branch_3}}
+					<p class="help">分支状态：<span id="h_b_3_s" ></span></p>
+					<script>
+						id_vob_branch_3=document.getElementById("id_vob_branch_3");
+						id_vob_branch_3.onchange = function()
+						{show_branch_status(3);};
+					</script>
+					<div>
+					<label> 分支3克隆MR：</label> 
+					{{form.vob_branch_3_mr_id}}
+					<input type="button" id='clone_mr_button_3' value="克隆MR" />
+					<script>
+					    clone_mr_button_3=document.getElementById("clone_mr_button_3");
+					    clone_mr_button_3.onclick =
+					    function()
+					    {
+						document.getElementById('id_vob_branch_3_mr_id').value='暂不支持自动clone';
+					    };
+					</script>
+					</div>
+					{{form.errors.vob_branch_3}}
+				</div>
+				<div class="form-row" >
+					<label> Vob branch 4：</label> 
+					{{form.vob_branch_4}}
+					<p class="help">分支状态：<span id="h_b_4_s" ></span></p>
+					<script>
+						id_vob_branch_4=document.getElementById("id_vob_branch_4");
+						id_vob_branch_4.onchange = function()
+						{show_branch_status(4);};
+					</script>
+					<div>
+					<label> 分支4克隆MR：</label> 
+					{{form.vob_branch_4_mr_id}}
+					<input type="button" id='clone_mr_button_4' value="克隆MR" />
+					<script>
+					    clone_mr_button_4=document.getElementById("clone_mr_button_4");
+					    clone_mr_button_4.onclick =
+					    function()
+					    {
+						document.getElementById('id_vob_branch_4_mr_id').value='暂不支持自动clone';
+					    };
+					</script>
+					</div>
+					{{form.errors.vob_branch_4}}
+				</div>
+				<div class="form-row" >
+					<label> Vob branch 5：</label> 
+					{{form.vob_branch_5}}
+					<p class="help">分支状态：<span id="h_b_5_s" ></span></p>
+					<script>
+						id_vob_branch_5=document.getElementById("id_vob_branch_5");
+						id_vob_branch_5.onchange = function()
+						{show_branch_status(5);};
+					</script>
+					<div>
+					<label> 分支5克隆MR：</label> 
+					{{form.vob_branch_5_mr_id}}
+					<input type="button" id='clone_mr_button_5' value="克隆MR" />
+					<script>
+					    clone_mr_button_5=document.getElementById("clone_mr_button_5");
+					    clone_mr_button_5.onclick =
+					    function()
+					    {
+						document.getElementById('id_vob_branch_5_mr_id').value='暂不支持自动clone';
+					    };
+					</script>
+					</div>
+					{{form.errors.vob_branch_5}}
+				</div>
+				<div class="form-row" >
+					<label> Vob branch 6：</label> 
+					{{form.vob_branch_6}}
+					<p class="help">分支状态：<span id="h_b_6_s" ></span></p>
+					<script>
+						id_vob_branch_6=document.getElementById("id_vob_branch_6");
+						id_vob_branch_6.onchange = function()
+						{show_branch_status(6);};
+					</script>
+					<div>
+					<label> 分支6克隆MR：</label> 
+					{{form.vob_branch_6_mr_id}}
+					<input type="button" id='clone_mr_button_6' value="克隆MR" />
+					<script>
+					    clone_mr_button_6=document.getElementById("clone_mr_button_6");
+					    clone_mr_button_6.onclick =
+					    function()
+					    {
+						document.getElementById('id_vob_branch_6_mr_id').value='暂不支持自动clone';
+					    };
+					</script>
+					</div>
+					{{form.errors.vob_branch_6}}
+				</div>
+			</fieldset>
+
+			<fieldset class="module aligned ()">
+				<div class="form-row" >
+					<label>描述：</label> 
+					{{form.descn}}
+					{{form.errors.descn}}
+					<input type="button" id='init_descn_button' value="生成描述"/>
+					<script>
+						document.getElementById('id_descn').cols=60;
+						document.getElementById('id_descn').rows=15;
+						init_descn_button=document.getElementById("init_descn_button");
+						init_descn_button.onclick = function()
+						{create_descn_info();};
+					</script>
+					<input type="button" value="清空" onclick="
+					document.getElementById('id_descn').value='';
+					"/>
+				</div>
+			</fieldset>
+
+			<div class="submit-row">
+				{%if original%}
+				<p class="float-left">
+				<a class="deletelink" href="delete/" onclick="
+					if (confirm('确认删除？'))
+					return ture;
+					else
+					return false;    
+					">删除</a>
+				</p>
+				{%endif%}
+				<input type="submit" value="保存" class="default" />
+			</div>
+			<script type="text/javascript">document.getElementById("id_title").focus();</script>
+		</div>
+	</form>
+
+</div>
+<script>
+	var title = document.getElementById('id_title');
+	title.size=60;
+	show_branch_status(1);
+	show_branch_status(2);
+	show_branch_status(3);
+	show_branch_status(4);
+	show_branch_status(5);
+	show_branch_status(6);
+	id_vob_branch_1=document.getElementById("id_vob_branch_1");
+	id_vob_branch_1.onchange = function(){show_branch_status(1);};
+	id_vob_branch_2=document.getElementById("id_vob_branch_2");
+	id_vob_branch_2.onchange = function(){show_branch_status(2);};
+	id_vob_branch_3=document.getElementById("id_vob_branch_3");
+	id_vob_branch_3.onchange = function(){show_branch_status(3);};
+	id_vob_branch_4=document.getElementById("id_vob_branch_4");
+	id_vob_branch_4.onchange = function(){show_branch_status(4);};
+	id_vob_branch_5=document.getElementById("id_vob_branch_5");
+	id_vob_branch_5.onchange = function(){show_branch_status(5);};
+	id_vob_branch_6=document.getElementById("id_vob_branch_6");
+	id_vob_branch_6.onchange = function(){show_branch_status(6);};
+</script>
+{% endblock %}
+
+
+
