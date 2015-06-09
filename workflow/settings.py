@@ -150,13 +150,15 @@ def uncenter_auth(username, password):
     ret = p.communicate()[0].strip()
     return "True" == ret
 
+"""
 ############ log ############
 import logging
 logging.basicConfig(level=logging.DEBUG,
                     format='[%(asctime)s]%(levelname)-8s"%(message)s"',
                     datefmt='%Y-%m-%d %a %H:%M:%S',
-                    filename=r'e:/workflow_log.log',
+                    filename=r'/Users/apple/develop/workflow_log',
                     filemode='a+')
+"""
 
 FIRST_LOGIN = True
 

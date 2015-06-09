@@ -1,7 +1,6 @@
 #coding:utf-8
 
 import urllib,urllib2,cookielib
-import socks
 from HTMLParser import HTMLParser
 import sys
 

@@ -11,7 +11,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from get_user_info import get_user_info
 
-import ldap
 from workflow.VobConfig.views import update_all_vob_config
 
 
@@ -114,26 +113,6 @@ def login(request):
         password = data['password']
         username = username.lower()
         #域用户认证, admin用户除外
-        #Note: 需要安装python-ldap模块
-        print(username)
-        if username is not 'admin':
-            try:
-                conn = ldap.initialize('ldap://172.18.9.21')
-                conn.simple_bind_s('utscn\\'+username, password)
-                print("123")
-                user = _has_user(username)
-                if not user:#如果用户不存在，创建用户
-                    user = _add_user(username, password)
-                if user:#更新用户密码，保证使用django内部认证时可以通过
-                    user.set_password(password)
-                    user.save()
-            except:
-                print("123")
-                pass    #auth failed
-            
-        #校验用户信息是否完整，并自动完善
-        if username is not 'admin':
-            _check_and_update_user_info(username)
         from django.contrib import auth
         user = auth.authenticate(username=username,\
         password=password)
