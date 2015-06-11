@@ -1,15 +1,18 @@
-﻿{% extends "base_site.html" %}
-{% load i18n %}
-{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/forms.css{% endblock %}
-{% block extrahead %}
-<script type="text/javascript" src="/admin/jsi18n/"></script>
-<script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
-<script type="text/javascript" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
-<script type="text/javascript" src="{% admin_media_prefix %}js/SelectBox.js"></script>
-<script type="text/javascript" src="{% admin_media_prefix %}js/SelectFilter2.js"></script>
+﻿{% extends "admin/base_site.html" %}
+{% load i18n admin_modify adminmedia %}
+
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="../../../jsi18n/"></script>
+{{ media }}
 {% endblock %}
-{% block coltype %}colM{% endblock %}
-{% block bodyclass %}auth-group change-form{% endblock %}
+
+{% block stylesheet %}{% admin_media_prefix %}css/forms.css{% endblock %}
+
+{% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
+
+{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
+
+
 {% if not is_popup %}{% block breadcrumbs %}
 <div class="breadcrumbs">
     <a href="../../">{% trans "Home" %}</a>
@@ -17,22 +20,28 @@
     <a href="../all/">vob config 管理 </a>&rsaquo; 
     {% trans "Add" %} vob config
 </div>{% endblock %}{% endif %}
+
+
 {% block content %}
-
-{% if error_message %}
-<p class="errornote">{{ error_message }}</p>
-{% endif %}
-
-<div id="content-main">
-    <form action="" method="post" id="prjreport_form" enctype="multipart/form-data" align="center">
-	<table>
-	    {{form}}
-	</table>
-	<div class="submit-row">
-	    <input type="submit" value="保存" class="default" align="center" style="width:10%;text-align:center;vertical-align:middle"/>
+	{% if error_message %}
+		<p class="errornote">{{ error_message }}</p>
+	{% endif %}
+	<div id="content-main">
+		<form enctype="multipart/form-data" action method="post" id="prjreport_form"  >
+				<fieldset class="module aligned">
+				  {% for field in form %}
+						<div class="form-row" >
+							<label > {{field.label_tag}}</label> 
+							{{field}}
+							{{field.errors}}
+							{% if field.help_text %}<p class="help">{{ field.help_text|safe }}</p>{% endif %}
+						</div>
+				  {% endfor %}
+				</fieldset>
+			<div class="submit-row">
+				<input type="submit" value="保存" class="default" align="center" style="width:10%;text-align:center;vertical-align:middle"/>
+			</div>
+		</form>
 	</div>
-    </form>
-
-</div>
 {% endblock %}
 
