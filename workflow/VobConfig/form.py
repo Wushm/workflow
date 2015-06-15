@@ -11,6 +11,11 @@ class CVobConfigForm(forms.ModelForm):
               self.fields['approvers'].queryset = User.objects.all().order_by("username")
               self.fields['masters'].queryset = User.objects.all().order_by("username")
               self.fields['superAdmin'].queryset = User.objects.all().order_by("username")
+              self.fields['title'].widget.attrs.update({'class': 'vTextField'})
+              self.fields['branch'].widget.attrs.update({'class': 'vTextField'})
+              self.fields['servers'].widget.attrs.update({'class': 'vTextField'})
+              self.fields['choices'].widget.attrs.update({'class': 'vTextField'})
+              
               
        class Meta:
               model = CVobConfig
