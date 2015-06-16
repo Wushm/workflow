@@ -1,0 +1,44 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/changelists.css{% endblock %}
+{% block coltype %}flex{% endblock %}
+{% block bodyclass %}change-list{% endblock %}
+{% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../">{% trans "Home" %}</a> &rsaquo; ClearCase Lock 改动电子流</div>{% endblock %}{% endif %}
+{% block content %}
+<div id="content-main">
+
+<ul class="object-tools"><li><a href="add/" class="addlink">增加 ClearCase Lock 改动电子流</a></li></ul>
+
+{% load cclock_filters %}
+{% load cclock_tags%}
+<div class="module filtered" id="changelist">
+    <div id="toolbar">
+<form action="" method="post">
+        &nbsp;
+        工号：&nbsp;{{form.username}}
+        操作：&nbsp;{{form.action}}
+        分支：&nbsp;{{form.branch}}
+        <input type="submit" value="提交"/>
+    </div>
+</form>
+
+<div id="changelist-filter">
+<h2>说明</h2>
+<h3> 说明 </h3>
+<ul>
+    <li>暂时没有说明</li>
+</ul>
+</div>
+
+<div style="padding:10px;">
+    {{ret|safe}}
+</div>
+
+<p class="paginator">
+&nbsp;
+</p>
+
+</div>
+    
+</div>
+{% endblock %}

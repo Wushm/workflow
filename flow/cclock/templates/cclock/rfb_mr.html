@@ -1,0 +1,186 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/forms.css{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectBox.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectFilter2.js"></script>
+{% endblock %}
+{% block coltype %}colM{% endblock %}
+{% block bodyclass %}auth-group change-form{% endblock %}
+{% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../../../">{% trans "Home" %}</a> &rsaquo; <a href="../../"> ClearCase Lock 改动电子流 </a>&rsaquo; Rfb
+</div>{% endblock %}{% endif %}
+{% block content %}
+<div id="content-main">
+
+{% load cclock_filters %}
+{% load cclock_tags %}
+
+<script>
+    help_mr_infos_json = {{ help_mr_infos_json|safe }};
+    mr_infos_json = {{ mr_infos_json|safe }};
+    function get_dict_v(dict, key) {
+        v = dict[key];
+        return v?v:'';
+    }
+    function $_(id) {
+        return document.getElementById(id);
+    }
+    function clear_mr_infos() {
+        $_('id_mr_id').value = '';
+        $_('id_reviewer').value = '';
+        //$_('id_introduction_phase').value = '';
+        //$_('id_impacted_unit').value = '';
+        $_('id_load_information').value = '';
+        $_('id_resolutin_by_assignee').value = '';
+        $_('id_problem_casued_by_assignee').value = '';
+        $_('id_files_altered_by_assignee').value = '';
+        $_('id_test_exeCuted_by_assignee').value = '';
+    }
+    function init_mr_info(help_infos, infos) {
+        clear_mr_infos();
+        //$_('id_mr_id').value = infos['id'];
+        $_('id_mr_id').value = get_dict_v(help_infos, 'MR');
+        //$_('id_reviewer').value = infos['id'];
+        //$_('id_introduction_phase').value = '';
+        //$_('id_impacted_unit').value = '';
+        $_('id_load_information').value = infos['load_information'];
+		//将描述重新组装=======
+		$_('id_resolutin_by_assignee').value = 'MR:' +  get_dict_v(help_infos, 'MR');
+		$_('id_resolutin_by_assignee').value += '\r\nvob_branch_1:' +  get_dict_v(help_infos, 'vob_branch_1');
+		$_('id_resolutin_by_assignee').value += '\r\nvob_branch_2:' +  get_dict_v(help_infos, 'vob_branch_2');
+		$_('id_resolutin_by_assignee').value += '\r\nvob_branch_3:' +  get_dict_v(help_infos, 'vob_branch_3');
+		$_('id_resolutin_by_assignee').value += '\r\nvob_branch_4:' +  get_dict_v(help_infos, 'vob_branch_4');
+		$_('id_resolutin_by_assignee').value += '\r\nvob_branch_5:' +  get_dict_v(help_infos, 'vob_branch_5');
+		$_('id_resolutin_by_assignee').value += '\r\nvob_branch_6:' +  get_dict_v(help_infos, 'vob_branch_6');
+		$_('id_resolutin_by_assignee').value += '\r\nModifiers:' +  get_dict_v(help_infos, 'Modifiers');
+		$_('id_resolutin_by_assignee').value += '\r\nProblem caused:' +  get_dict_v(help_infos, 'Problem caused');
+		$_('id_resolutin_by_assignee').value += '\r\nResolution:' +  get_dict_v(help_infos, 'Resolution');
+		$_('id_resolutin_by_assignee').value += '\r\nSuggest Modules To Be Tested:' +  get_dict_v(help_infos, 'Suggest Modules To Be Tested');
+		$_('id_resolutin_by_assignee').value += '\r\nModified Files:' +  get_dict_v(help_infos, 'Modified Files');
+		//=======================
+        $_('id_problem_casued_by_assignee').value = infos['problem_cause_by'];
+        $_('id_files_altered_by_assignee').value = infos['altered_file'];
+        $_('id_test_exeCuted_by_assignee').value = infos['tests_executed_by'];
+        //===================
+		if(!$_('id_load_information').value)
+        	$_('id_load_information').value = 'refer to Target Load No';
+        if (!$_('id_problem_casued_by_assignee').value)
+            $_('id_problem_casued_by_assignee').value = "[Module Type]: \n[Introduction Time]: \n[Cause Type]: \n[Description]: " +
+            get_dict_v(help_infos, 'Resolution');
+        $_('id_reviewer_helper').innerHTML = get_dict_v(help_infos, 'Modifiers');
+		$_('id_cq_username').value = '{{user_name}}';
+        $_('id_cq_password').value = 'password';
+        //TODO 再加mr_infos_json的支持
+    }
+</script>
+
+<form action="" method="post" id="prjreport_form" enctype="multipart/form-data">
+<div>
+<fieldset class="module aligned ()">
+<div class="form-row" >
+  <label class="">MR IDs</label> 
+  {% for t in mr_infos %}
+    <a href="#" onclick="
+            init_mr_info(help_mr_infos_json[{{ forloop.counter0 }}], mr_infos_json[{{ forloop.counter0 }}]);
+            return false;
+            ">{{t.id}}({{t.state_name}})</a>
+  {% endfor %}
+</div>
+</fieldset>
+
+<fieldset class="module aligned ()">
+<div class="form-row" >
+  <label class="required">MR ID</label> 
+  {{form.mr_id}}
+  {{form.errors.mr_id}}
+</div>
+<div class="form-row" >
+  <label class="">Reviewer</label> 
+  {{form.reviewer}}
+  <span id="id_reviewer_helper"></span>
+  {{form.errors.reviewer}}
+</div>
+<div class="form-row" >
+  <label class="required">Introduction Phase</label> 
+  {{form.introduction_phase }}
+  {{form.errors.introduction_phase }}
+</div>
+<div class="form-row" >
+  <label class="required">Impacted Unit</label> 
+  {{form.impacted_unit }}
+  {{form.errors.impacted_unit }}
+</div>
+<div class="form-row" >
+  <label class="required">Load Information</label> 
+  {{form.load_information }}
+  {{form.errors.load_information }}
+</div>
+<div class="form-row" >
+  <label class="required">Resolutin by Assignee</label> 
+  {{form.resolutin_by_assignee }}
+  {{form.errors.resolutin_by_assignee }}
+</div>
+<div class="form-row" >
+  <label class="">Problem Casued by Assignee</label> 
+<table style="border:0px">
+  <tbody>
+    <tr>
+      <td>
+  {{form.problem_casued_by_assignee }}
+  {{form.errors.problem_casued_by_assignee }}
+      </td>
+      <td>
+          <b>Introduction Time:  </b><br/>
+          引入这个问题的时间 format:YYYY-MM-DD(2008-01-21)  <br/>
+          <br/>
+          <b>Cause Type: </b><br/>
+          Happens in initiation version<br/>
+          Introduce because of modification code<br/>
+          Last time not fix completely<br/>
+          Other<br/>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<div class="form-row" >
+  <label class="">Files Altered by Assignee</label> 
+  {{form.files_altered_by_assignee }}
+  {{form.errors.files_altered_by_assignee }}
+</div>
+<div class="form-row" >
+  <label class="">Test ExeCuted by Assignee</label> 
+  {{form.test_exeCuted_by_assignee }}
+  {{form.errors.test_exeCuted_by_assignee }}
+</div>
+</fieldset>
+
+<fieldset class="module aligned ()">
+<div class="form-row" >
+  <label class="required">Clearcase Username:</label> 
+  {{form.cq_username}}
+  <p class="help">cq用户名为邮箱前缀</p><BR></LEFT>  
+  {{form.errors.cq_username}}
+</div>
+<div class="form-row" >
+  <label class="required">Clearcase Password</label> 
+  {{form.cq_password}}
+  <p class="help">cq密码默认为'password'</p><BR></LEFT>  
+  {{form.errors.cq_password}}
+</div>
+</fieldset>
+
+<div class="submit-row">
+<input type="submit" value="修改" class="default" />
+</div>
+</div>
+</form>
+
+</div>
+<script>
+    document.getElementById('id_problem_casued_by_assignee').value = "[Module Type]: \n[Introduction Time]: \n[Cause Type]: \n[Description]: ";
+</script>
+{% endblock %}

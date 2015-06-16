@@ -1,0 +1,129 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/forms.css{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectBox.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectFilter2.js"></script>
+{% endblock %}
+{% block coltype %}colM{% endblock %}
+{% block bodyclass %}auth-group change-form{% endblock %}
+{% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../../">{% trans "Home" %}</a> &rsaquo; <a href="../"> ClearQuest MR 改动电子流 </a>&rsaquo; 
+{% if add %}{% trans "Add" %} ClearQuest MR 改动电子流 {% else %}{{ original|truncatewords:"18" }}{% endif %}
+</div>{% endblock %}{% endif %}
+{% block content %}
+<div id="content-main">
+
+{% load cclock_filters %}
+{% load cclock_tags %}
+
+<script>
+	vob_branch_release_number = {% vob_branch_release_number %}
+	function show_vob_branch_release_number()
+	{
+	    var vob_branch =  document.getElementById('id_vob_branch').value;
+	    var release_number = vob_branch_release_number[vob_branch];
+	    document.getElementById('id_found_release_number').value = release_number;
+	}
+</script>
+
+<form action="" method="post" id="prjreport_form" enctype="multipart/form-data">
+<div>
+<fieldset class="module aligned ()">
+<div class="form-row" >
+  <label class="required"> CQ Username：</label> 
+  {{form.cq_username}}
+  <script>
+	  document.getElementById('id_cq_username').value='{{user_name}}';
+  </script>
+  {{form.errors.cq_username}}
+</div>
+<div class="form-row" >
+  <label class="required"> Headline：</label> 
+  {{form.headline}}
+  {{form.errors.headline}}
+<script>
+	var headline= document.getElementById('id_headline');
+	headline.size=120;
+</script>
+  
+</div>
+<div class="form-row" >
+  <label class="required"> Project：</label> 
+  {{form.project}}
+  {{form.errors.project}}
+</div>
+
+<div class="form-row" >
+  <label class="required"> vob branch：</label> 
+  {{form.vob_branch}}
+  <script>
+    id_vob_branch=document.getElementById("id_vob_branch");
+    id_vob_branch.onchange = function()
+    {show_vob_branch_release_number();};
+  </script>
+  {{form.errors.vob_branch}}
+</div>
+
+
+<div class="form-row" >
+  <label class="required">Found Release Number：</label> 
+  {{form.found_release_number}}
+  <p class="help">格式如：1.0.0,例如您需要申请1.3.2.18sp4，那么你就只需要填写1.3.2</p><BR></LEFT>
+  {{form.errors.found_release_number}}
+</div>
+</fieldset>
+
+<fieldset class="module aligned ()">
+<div class="form-row" >
+  <label class="required">问题描述：</label> 
+  {{form.problem_description}}
+  {{form.errors.problem_description}}
+  <input type="button" id='init_descn_button' value="初始化描述" onclick="
+  			  var s = '';
+              s+='Modifiers/Reviewers:';
+              s+='\r\nProblem caused:';
+              s+='\r\nResolution:';
+			  s+='\r\nSuggest Modules To Be Tested:';
+			  s+='\r\nModified Files:';
+              s+='\r\n\r\n';
+          document.getElementById('id_problem_description').value=s;
+          "/>
+  <script>
+      document.getElementById('id_problem_description').cols=60;
+      document.getElementById('id_problem_description').rows=20;
+  </script>
+  <input type="button" value="清空" onclick="
+          document.getElementById('id_problem_description').value='';
+          "/>
+</div>
+</fieldset>
+
+
+<div class="submit-row">
+{%if original%}
+<p class="float-left">
+<a class="deletelink" href="delete/" onclick="
+if (confirm('确认删除？'))
+return ture;
+else
+return false;    
+    ">删除</a>
+</p>
+{%endif%}
+<script type="text/javascript">
+function disableButton()
+  {
+  document.getElementById("submit").disabled=true
+  }
+</script>
+<input type="submit" id="submit" value="保存"/>
+</div>
+   <script type="text/javascript">document.getElementById("id_title").focus();</script>
+</div>
+</form>
+
+</div>
+{% endblock %}

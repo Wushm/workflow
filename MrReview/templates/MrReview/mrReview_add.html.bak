@@ -1,0 +1,51 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/forms.css{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectBox.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectFilter2.js"></script>
+{% endblock %}
+{% block coltype %}colM{% endblock %}
+{% block bodyclass %}auth-group change-form{% endblock %}
+</div>{% endblock %}{% endif %}
+{% block content %}
+<div id="content-main">
+
+{% load cclock_filters %}
+{% load cclock_tags %}
+<form action="" method="post" id="prjreport_form" enctype="multipart/form-data">
+<div>
+<fieldset class="module aligned ()">
+<div class="form-row" >
+  <label> reviewer1:</label> 
+  {{form.reviewer1}}
+</div>
+<div class="form-row" >
+  <label> reviewer2:</label> 
+  {{form.reviewer2}}
+</div>
+<div class="form-row" >
+  <label> reviewer2 energy:</label> 
+  {{form.reviewer2_energy}}
+</div>
+<div class="form-row" >
+  <label> total cost time(hour):</label> 
+  {{form.totalTime}}
+</div>
+<div>
+  <label> MR list：</label>
+  <textarea rows="10" cols="40" name="bugs" id="id_bugs">{{bugs}}</textarea>
+  <ul class="Warning"><li>注意：一行一个MR,MR号必须填写，没有MR,点击：<a href="../../../mr_flow/edit">新建一个MR</a></li></ul><BR></LEFT
+  {{form.errors.ext_bugs|safe}}
+</div>
+<div>
+<input type="submit" value="save" class="default" />
+</div>
+   <script type="text/javascript">document.getElementById("id_title").focus();</script>
+</div>
+</form>
+</div>
+{% endblock %}

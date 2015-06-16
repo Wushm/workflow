@@ -1,0 +1,108 @@
+﻿{% extends "base_site.html" %}
+{% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/forms.css{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectBox.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectFilter2.js"></script>
+<link rel="stylesheet" href="http://127.0.0.1/sites_media/workflow/styles/ticket.css" type="text/css" />
+{% endblock %}
+{% block coltype %}colM{% endblock %}
+{% block bodyclass %}auth-group change-form{% endblock %}
+{% if add %}{% trans "Add" %} review信息 {% else %}{{ original|truncatewords:"18" }}{% endif %}
+{% block content %}
+<div id="content-main">
+<div>
+
+      <!-- Do not show the ticket (pre)view when the user first comes to the "New Ticket" page.
+           Wait until they hit preview. -->
+        <!-- Ticket Box (ticket fields along with description) -->
+        <div id="ticket">
+          <table class="properties">
+            <tbody><tr>
+              <th>reviewer1：</th>
+              <td>reviewer1</td>
+              <th>reviewer2：</th>
+              <td>reviewer2</td>
+              <th>reviewer2投入度：</th>
+              <td>reviewer2_energy</td>
+            </tr>
+
+            <tr>
+                <th>
+                  total cost time(hour)：
+                </th>
+                <td>
+                  totalTime
+                </td>
+                <th>
+                  MR root cause：
+                </th>
+                <td>
+                   mrRootCause
+                </td>
+            </tr>
+            <tr>
+                <th>
+                  所属模块或特性：
+                </th>
+                <td>
+                  module
+                </td>
+                <th>
+                  team：
+                </th>
+                <td>
+                  team
+                </td>
+            </tr>
+            <tr>
+                <th>
+                  问题原因描述：
+                </th>
+                <td>
+                  reasonDecription
+                </td>
+                <th>
+                  Risk：
+                </th>
+                <td>
+                  risk
+                </td>
+                <th>
+                  典型问题：
+                </th>
+                <td>
+                  typicalQuestion
+                </td>
+            </tr>
+            <tr>
+                <th>
+                  review中发现的问题，共
+                </th>
+                <td>
+                  questionNum
+                </td>
+                <th>
+                  个：
+                </th>
+            </tr>
+          </tbody></table>
+            <div class="description">
+              <h3 id="comment:description">描述</h3>
+              <div>
+                <p>
+                questionDecr
+                <br/>
+                </p>
+              </div>
+            </div>
+        </div>
+</form>
+
+
+</div>
+{% endblock %}
+

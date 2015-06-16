@@ -1,0 +1,35 @@
+﻿{% extends "base_site.html" %}
+{% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/forms.css{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectBox.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectFilter2.js"></script>
+{% endblock %}
+{% block coltype %}colM{% endblock %}
+{% block bodyclass %}auth-group change-form{% endblock %}
+{% if not is_popup %}{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="../../../">{% trans "Home" %}</a>
+    &rsaquo;
+    <a href="../../all/">vob config 管理 </a>&rsaquo; 
+    {% trans "Add" %} vob config
+</div>{% endblock %}{% endif %}
+{% block content %}
+{% if error_message %}
+<p class="errornote">{{ error_message }}</p>
+{% endif %}
+<div id="content-main">
+	<form action="" method="post" id="prjreport_form" enctype="multipart/form-data" align="center" >
+	    <table>
+		{{form}}
+	    </table>
+	    <div>
+		<input type="submit" action="add" value="更新" class="default" align="center" style="width:10%;text-align:center;vertical-align:middle"/>
+	    </div>
+	</form>
+
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.7	//
+ApproveList	.\checkmr\models.py	/^class ApproveList(models.Model):$/;"	c
+ApproveList	.\lock\models.py	/^class ApproveList(models.Model):$/;"	c
+ApproveLog	.\checkmr\models.py	/^class ApproveLog(models.Model):$/;"	c
+ApproveLog	.\lock\models.py	/^class ApproveLog(models.Model):$/;"	c
+ApproveResultFilterNode	.\templatetags\cclock_tags.py	/^class ApproveResultFilterNode(template.Node):$/;"	c
+CCLockFlow	.\models.py	/^class CCLockFlow(models.Model):$/;"	c
+CCLockFlowForm	.\forms.py	/^class CCLockFlowForm(forms.ModelForm):$/;"	c
+CCLockForm	.\lock\forms.py	/^class CCLockForm(forms.Form):$/;"	c
+MR	.\models.py	/^class MR(models.Model):$/;"	c
+Meta	.\forms.py	/^    class Meta:$/;"	c	class:CCLockFlowForm
+QueryForm	.\forms.py	/^class QueryForm(forms.Form):$/;"	c
+RfbMrForm	.\forms.py	/^class RfbMrForm(forms.Form):$/;"	c
+SearchMRForm	.\checkmr\forms.py	/^class SearchMRForm(forms.Form):$/;"	c
+UpdateMRForm	.\checkmr\forms.py	/^class UpdateMRForm(forms.Form):$/;"	c
+__init__	.\forms.py	/^    def __init__(self,*args,**kwargs):$/;"	m	class:CCLockFlowForm
+__init__	.\templatetags\cclock_tags.py	/^    def __init__(self):$/;"	m	class:ApproveResultFilterNode
+__str__	.\models.py	/^    def __str__(self):$/;"	m	class:CCLockFlow	file:
+__unicode__	.\models.py	/^    def __unicode__(self):$/;"	m	class:CCLockFlow	file:
+_auto_login	.\views.py	/^def _auto_login(request, username):$/;"	f
+_can_approve	.\views.py	/^def _can_approve(u, cclock):$/;"	f
+_do_upload	.\views.py	/^def _do_upload(files):$/;"	f
+_format_bugs	.\views.py	/^def _format_bugs(bugs):$/;"	f
+_format_start_end_date	.\checkmr\views.py	/^def _format_start_end_date(start, end):$/;"	f
+_get_all_approver_mails	.\views.py	/^def _get_all_approver_mails(cclock):$/;"	f
+_get_flow_descn	.\checkmr\views.py	/^def _get_flow_descn(mr_id):$/;"	f
+_get_mr_infos	.\checkmr\views.py	/^def _get_mr_infos(t_mrs, state):$/;"	f
+_get_mrreview_list_from_workflow	.\views.py	/^def _get_mrreview_list_from_workflow(cclock):$/;"	f
+_send_approve_mail	.\views.py	/^def _send_approve_mail(cclock, action):$/;"	f
+_send_new_apply_notice_mail	.\views.py	/^def _send_new_apply_notice_mail(cclock):$/;"	f
+_str2datetime	.\checkmr\views.py	/^def _str2datetime(value, default_value):$/;"	f
+_username2vob_branchs	.\views.py	/^def _username2vob_branchs(username):$/;"	f
+add	.\views.py	/^def add(request):$/;"	f
+add_master	.\lock\clearlock.py	/^def add_master(vobbranch,users):$/;"	f
+all_branch_can_approve	.\views.py	/^def all_branch_can_approve(u,cclock):$/;"	f
+approve	.\views.py	/^def approve(request, id, action=''):$/;"	f
+approve_result	.\templatetags\cclock_filters.py	/^def approve_result(value):$/;"	f
+approver_name	.\templatetags\cclock_tags.py	/^def approver_name():$/;"	f
+approvers	.\templatetags\cclock_tags.py	/^def approvers():$/;"	f
+attachments	.\templatetags\cclock_filters.py	/^def attachments(value):$/;"	f
+ault_value	.\checkmr\views.py	/^        return default_value$/;"	f	function:_str2datetime
+aults	.\checkmr\urls.py	/^from django.conf.urls.defaults import *$/;"	f
+aults	.\lock\urls.py	/^from django.conf.urls.defaults import *$/;"	f
+aults	.\urls.py	/^from django.conf.urls.defaults import *$/;"	f
+branch_can_approve	.\views.py	/^    def branch_can_approve(username,branch):$/;"	f	function:all_branch_can_approve
+clear_mr_infos	.\templates\cclock\rfb_mr.html	/^    function clear_mr_infos() {$/;"	f
+command_mr	.\views.py	/^    def command_mr(bug):$/;"	f	function:_format_bugs
+decode_filename	.\templatetags\cclock_filters.py	/^    def decode_filename(fn):$/;"	f	function:attachments
+decode_gbk	.\helper.py	/^def decode_gbk(s):$/;"	f
+do_approve_result_filter	.\templatetags\cclock_tags.py	/^def do_approve_result_filter(parser, token):$/;"	f
+encode_filename	.\views.py	/^    def encode_filename(fn):$/;"	f	function:_do_upload
+exec_assign	.\lock\views.py	/^def exec_assign(eid,vobbranch) :$/;"	f
+exec_lslock	.\lock\views.py	/^def exec_lslock(vobbranch) :$/;"	f
+exec_recover	.\lock\views.py	/^def exec_recover(eid,vobbranch) :$/;"	f
+gen_approve_url	.\views.py	/^def gen_approve_url(username, approve_check_code, cclock_id, action):$/;"	f
+getLockExceptUsers	.\lock\clearlock.py	/^def getLockExceptUsers(vobbranch):$/;"	f
+get_all_approver_mails	.\views.py	/^    def get_all_approver_mails(vob_branch):$/;"	f	function:_get_all_approver_mails
+get_checkuser_code	.\views.py	/^def get_checkuser_code(username, approve_check_code):$/;"	f
+get_dict_v	.\templates\cclock\rfb_mr.html	/^    function get_dict_v(dict, key) {$/;"	f
+get_key_word	.\helper.py	/^def get_key_word(s):$/;"	f
+get_mr_infos	.\helper.py	/^def get_mr_infos(mr_id):$/;"	f
+get_user_cname	.\views.py	/^def get_user_cname(username):$/;"	f
+get_user_email	.\views.py	/^def get_user_email(username):$/;"	f
+get_v_from_approvers	.\views.py	/^    def get_v_from_approvers(k):$/;"	f	function:_can_approve
+get_vb_approver	.\checkmr\templates\cclock\checkmr\cclocks_edit.html	/^    function get_vb_approver(vb) {$/;"	f
+get_vb_approver	.\lock\templates\cclock\lock\cclocks_edit.html	/^    function get_vb_approver(vb) {$/;"	f
+get_vb_approver	.\templates\cclock\cclocks_edit.html	/^    function get_vb_approver(vb) {$/;"	f
+get_vb_approver	.\templates\cclock\cclocks_newFlow2newMR.html	/^    function get_vb_approver(vb) {$/;"	f
+get_vb_approver	.\templates\cclock\cclocks_update.html	/^    function get_vb_approver(vb) {$/;"	f
+get_vb_approver	.\templates\cclock\cclocks_view.html	/^    function get_vb_approver(vb) {$/;"	f
+index	.\checkmr\views.py	/^def index(request):$/;"	f
+index	.\lock\views.py	/^def index(request):$/;"	f
+init_mr_info	.\templates\cclock\rfb_mr.html	/^    function init_mr_info(help_infos, infos) {$/;"	f
+js_str	.\templatetags\cclock_filters.py	/^def js_str(value):$/;"	f
+logAssign	.\lock\approve_log.py	/^def logAssign(eid,vobbranch) :$/;"	f
+logRecover	.\lock\approve_log.py	/^def logRecover(eid,vobbranch,auto_recover) :$/;"	f
+ls_lock	.\lock\clearlock.py	/^def ls_lock(vobbranch) :$/;"	f
+mr_infos2csv	.\helper.py	/^def mr_infos2csv(fn, data):$/;"	f
+my_cclocks	.\views.py	/^def my_cclocks(request):$/;"	f
+newFlow2newMR	.\views.py	/^def newFlow2newMR(request):$/;"	f
+o	.\templates\cclock\cclocks_view.html	/^    function o(s) {$/;"	f
+parse_bugs	.\views.py	/^def parse_bugs(cclock_bugs):$/;"	f
+parse_cc_descn	.\helper.py	/^def parse_cc_descn(descn):$/;"	f
+query	.\views.py	/^def query(request):$/;"	f
+recoverApprove	.\lock\approve_log.py	/^def recoverApprove() :  # called every 20 minutes.$/;"	f
+render	.\templatetags\cclock_tags.py	/^    def render(self, context):$/;"	m	class:ApproveResultFilterNode
+replace_lock	.\lock\clearlock.py	/^def replace_lock(vobbranch,users):$/;"	f
+rfb_mr	.\views.py	/^def rfb_mr(request, id):$/;"	f
+show_approver	.\checkmr\templates\cclock\checkmr\cclocks_edit.html	/^    function show_approver(v_b, node) {$/;"	f
+show_approver	.\lock\templates\cclock\lock\cclocks_edit.html	/^    function show_approver(v_b, node) {$/;"	f
+show_approver	.\templates\cclock\cclocks_edit.html	/^    function show_approver(v_b, node) {$/;"	f
+show_approver	.\templates\cclock\cclocks_newFlow2newMR.html	/^    function show_approver(v_b, node) {$/;"	f
+show_approver	.\templates\cclock\cclocks_update.html	/^    function show_approver(v_b, node) {$/;"	f
+str_bugs	.\templatetags\cclock_filters.py	/^def str_bugs(bugs):$/;"	f
+todo_cclocks	.\views.py	/^def todo_cclocks(request):$/;"	f
+update	.\views.py	/^def update(request, id):$/;"	f
+verify_mrid	.\views.py	/^    def verify_mrid(mrid):$/;"	f	function:_format_bugs
+view	.\views.py	/^def view(request, id):$/;"	f
+view_all_approved_result	.\views.py	/^def view_all_approved_result(request):$/;"	f

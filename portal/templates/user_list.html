@@ -1,0 +1,73 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/changelists.css{% endblock %}
+{% block coltype %}flex{% endblock %}
+{% block bodyclass %}change-list{% endblock %}
+{% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="/">{% trans "Home" %}</a> &rsaquo; 用户</div>{% endblock %}{% endif %}
+{% block content %}
+<div id="content-main">
+
+<ul class="object-tools"><li><a href="add/" class="addlink">增加 用户</a></li></ul>
+
+<div class="module filtered" id="changelist">
+
+
+<div id="toolbar"><form id="changelist-search" action="" method="get">
+<div><!-- DIV needed for valid HTML -->
+<label for="searchbar"><img src="/media/img/admin/icon_searchbox.png" alt="Search" /></label>
+<input type="text" size="40" name="q" value="{{q}}" id="searchbar" />
+<input type="submit" value="执行" />
+
+
+</div>
+</form></div>
+<script type="text/javascript">document.getElementById("searchbar").focus();</script>
+
+
+
+
+
+<div id="changelist-filter">
+<h2>过滤器</h2>
+   
+<h3> 组 </h3>
+<ul>
+    {{group_filtre|safe}}
+</ul>
+
+
+</div>
+
+
+<table cellspacing="0">
+	<thead>
+		<tr>
+			<th>用户名</th>
+            <th>E-Mail</th>
+			<th>组</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for o in users%}
+		<tr class="row1">
+			<th><a href="{{o.uid}}/">{{o.username}}</a></th>
+            <td>{{o.email}}</td>
+			<td>{{o.html_groups|safe}}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+
+
+
+<p class="paginator">
+
+
+
+</p>
+
+</div>
+    
+</div>
+{% endblock %}
