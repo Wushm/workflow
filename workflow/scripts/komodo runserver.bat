@@ -1,1 +1,0 @@
-python "D:\Program Files (x86)\ActiveState Komodo IDE 5\lib\support\dbgp\bin\pydbgp.py" -d localhost:9000 D:\workflow\manage.py runserver --noreload
