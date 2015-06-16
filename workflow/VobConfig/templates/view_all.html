@@ -10,9 +10,6 @@
     <li>
         <a href="../add/" class="addlink">增加 vob_config</a>
     </li>
-    <li>
-        <a href="../refresh/" class="refreshlink">刷新 vob_config</a>
-    </li>
 </ul>
 <table cellspacing="0">
 	<thead>
@@ -22,7 +19,7 @@
         <th>管理员</th>
         <th>分支锁住状态</th>
         <th>分支开发状态</th>
-        <th>分支release number</th>
+        <th>分支release 版本</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -37,7 +34,7 @@
                 <td>已解锁</td>
             {% endif %}
             <td>{{o.devStatus}}</td>
-            <td>{{o.release_number}}</td>
+            <td>{{o.releaseVersion}}</td>
 	    </tr>
 	{% endfor %}
 	</tbody>
