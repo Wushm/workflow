@@ -6,26 +6,28 @@
 {% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../">{% trans "Home" %}</a> &rsaquo; vob config 管理</div>{% endblock %}{% endif %}
 {% block content %}
 <div id="content-main">
+		<!---
 <ul class="object-tools">
     <li>
         <a href="../add/" class="addlink">增加 vob_config</a>
     </li>
 </ul>
+		-->
 <table cellspacing="0">
 	<thead>
 		<tr>
-	<th>分支名称</th>
-	<th>服务器</th>
-        <th>管理员</th>
-        <th>分支锁住状态</th>
-        <th>分支开发状态</th>
-        <th>分支产品</th>
+			<th>分支名称</th>
+			<th>服务器名称</th>
+			<th>分支管理员</th>
+			<th>分支锁定状态</th>
+			<th>分支开发状态</th>
+			<th>分支产品</th>
 		</tr>
 	</thead>
 	<tbody>
 	{% for o in vob_config%}
 	    <tr class="{% cycle row1,row2 %}">
-                <th><a href="../view/{{o.id}}/">{{o.branch}}</a></th>
+                <th><a href="../view/{{o.id}}/">{{o.title}}</a></th>
                 <td>{{o.servers}}</td>
                 <td>{{o.superAdmin.first_name}}</td>
             {% if o.isLock %}
@@ -36,7 +38,7 @@
             <td>{{o.devStatus}}</td>
 			<td>
 			{% for product in o.product.all %}	
-			<a href="../../product_manage/{{product.id}}/product/">{{product.title}}|</a>
+			<a href="../../product_manage/product/{{o.id}}/{{product.id}}/">{{product.title}}({{product.product_manager.first_name}}) | </a>
 			{% endfor %}
 			</td>
 	    </tr>

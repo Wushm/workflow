@@ -10,6 +10,6 @@ except:
     pass
 
 urlpatterns = patterns('workflow.Product',
-        (r'^(?P<id>\d+)/product/$','views.product_view'),
+        (r'^product/(?P<vob_config_id>\d+)/(?P<id>\d+)/$','views.product_view'),
         
 )

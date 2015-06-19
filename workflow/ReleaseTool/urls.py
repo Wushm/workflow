@@ -9,5 +9,5 @@ except:
     pass
 
 urlpatterns = patterns('workflow.ReleaseTool',
-        (r'^release/(?P<id>\d+)/$','views.release'),
+        (r'^release/(?P<vob_config_id>\d+)/(?P<id>\d+)/$','views.release'),
 )
