@@ -19,22 +19,26 @@
         <th>管理员</th>
         <th>分支锁住状态</th>
         <th>分支开发状态</th>
-        <th>分支release 版本</th>
+        <th>分支产品</th>
 		</tr>
 	</thead>
 	<tbody>
 	{% for o in vob_config%}
 	    <tr class="{% cycle row1,row2 %}">
-                <th><a href="../update/{{o.id}}/">{{o.branch}}</a></th>
+                <th><a href="../view/{{o.id}}/">{{o.branch}}</a></th>
                 <td>{{o.servers}}</td>
-                <td>{{o.superAdmin}}</td>
+                <td>{{o.superAdmin.first_name}}</td>
             {% if o.isLock %}
                 <td>锁定</td>
             {% else %}
                 <td>已解锁</td>
             {% endif %}
             <td>{{o.devStatus}}</td>
-            <td>{{o.releaseVersion}}</td>
+			<td>
+			{% for product in o.product.all %}	
+			<a href="../../product_manage/{{product.id}}/product/">{{product.title}}|</a>
+			{% endfor %}
+			</td>
 	    </tr>
 	{% endfor %}
 	</tbody>

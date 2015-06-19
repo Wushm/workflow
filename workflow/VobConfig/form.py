@@ -15,6 +15,8 @@ class CVobConfigForm(forms.ModelForm):
               self.fields['branch'].widget.attrs.update({'class': 'vTextField'})
               self.fields['servers'].widget.attrs.update({'class': 'vTextField'})
               self.fields['choices'].widget.attrs.update({'class': 'vTextField'})
+              self.fields['product'].widget.attrs.update({'class': 'vTextField'})
+              self.fields['release_number'].widget.attrs.update({'type': 'hidden'}) 
               
               
        class Meta:

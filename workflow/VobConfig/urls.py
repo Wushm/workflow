@@ -11,6 +11,7 @@ except:
 urlpatterns = patterns('workflow.VobConfig',
         (r'^add/$','views.add'),
         (r'^all/$','views.all'),
-        (r'^refresh/$','views.refresh'),
-        (r'^update/(?P<id>\d+)/$','views.update'),
+        (r'^view/(?P<id>\d+)/$','views.view'),
+        #(r'^refresh/$','views.refresh'),
+        #(r'^update/(?P<id>\d+)/$','views.update'),
 )

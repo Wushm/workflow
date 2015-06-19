@@ -126,10 +126,10 @@ def master(vob_branch):
     return masters
 
 def view(request, id):
-    #vob_config = CVobConfig.objects.get('1')
-    approvers('test')
+    vob_config = CVobConfig.objects.get(id = id)
     return render_to_response("view.html",\
-                              {'title':'分支信息管理',\
+                              {'title':vob_config.title,\
+                              'vob_config':vob_config,\
                               },\
     context_instance=template.RequestContext(request))
     
