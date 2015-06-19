@@ -97,7 +97,9 @@ INSTALLED_APPS = (
     'workflow.MrReview',
     'workflow.Spec',
     'workflow.addnewfile',
-    'workflow.VobConfig'
+    'workflow.VobConfig',
+    'workflow.ReleaseTool',
+    'workflow.Product'
 )
 
 ############################################
@@ -150,15 +152,13 @@ def uncenter_auth(username, password):
     ret = p.communicate()[0].strip()
     return "True" == ret
 
-"""
 ############ log ############
 import logging
 logging.basicConfig(level=logging.DEBUG,
                     format='[%(asctime)s]%(levelname)-8s"%(message)s"',
                     datefmt='%Y-%m-%d %a %H:%M:%S',
-                    filename=r'/Users/apple/develop/workflow_log',
+                    filename=r'/Users/apple/develop/workflow_log/workflow.log',
                     filemode='a+')
-"""
 
 FIRST_LOGIN = True
 

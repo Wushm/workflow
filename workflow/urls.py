@@ -15,8 +15,7 @@ urlpatterns = patterns('',
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line for to enable the admin:
-    #(r'^static/(?P<path>.*)$', 'django.views.static.serve',
-    #    {'document_root': settings.MEDIA_ROOT}),    
+    (r'^static/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.MEDIA_ROOT}),    
     (r'^admin/(.*)', admin.site.root),
     (r'^mr_flow/',include('workflow.mr_flow.urls')),
     (r'^cclock/', include('workflow.flow.cclock.urls')),
@@ -25,4 +24,6 @@ urlpatterns = patterns('',
     (r'^', include('workflow.portal.urls')),
     (r'^newfile/', include('workflow.addnewfile.urls')),
     (r'^vob_config/',include('workflow.VobConfig.urls')),
+    (r'^release_tool/',include('workflow.ReleaseTool.urls')),
+    (r'^product_manage/',include('workflow.Product.urls')),
 )
