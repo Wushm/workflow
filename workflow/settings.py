@@ -10,6 +10,22 @@ PERL_SCRIPT_DIR = os.path.join(ROOT_DIR, 'perl_scripts')
 Update_MR_CMD = 'cqperl UpdateMR.pl "%s" "%s" "%s" %s'#username pswd cq_db mrs.....
 Rfb_MR_CMD = 'cqperl RfbMR.pl "%s" "%s" "%s" "%s"'#username pswd cq_db mrs.....
 New_MR_CMD = 'cqperl submit_new_mr.pl "%s" "%s" "%s" "%s"'
+def hostname():  
+        sys = os.name  
+  
+        if sys == 'nt':  
+                hostname = os.getenv('computername')  
+                return hostname  
+  
+        elif sys == 'posix':  
+                host = os.popen('echo $HOSTNAME')  
+                try:  
+                        hostname = host.read()  
+                        return hostname  
+                finally:  
+                        host.close()  
+        else:  
+                return 'Unkwon hostname'
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -17,12 +33,22 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+
+
+HOST_NAME = hostname()
+
 DATABASE_ENGINE = 'mysql'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 DATABASE_NAME = 'workflow'             # Or path to database file if using sqlite3.
-DATABASE_USER = 'root'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'admin'         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+if HOST_NAME == 'HZ_RD_WUSHUMING':
+	DATABASE_USER = 'root'             # Not used with sqlite3.
+	DATABASE_PASSWORD = '123456'         # Not used with sqlite3.
+	DATABASE_HOST = 'hz_rd_server'             # Set to empty string for localhost. Not used with sqlite3.
+	DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+else:
+	DATABASE_USER = 'root'             # Not used with sqlite3.
+	DATABASE_PASSWORD = 'admin'         # Not used with sqlite3.
+	DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
+	DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 #DATABASE_STORAGE_ENGINE = "MyISAM / INNODB / ETC"
 DATABASE_OPTIONS = {"init_command": "SET foreign_key_checks = 0;"}
 
@@ -154,10 +180,14 @@ def uncenter_auth(username, password):
 
 ############ log ############
 import logging
+if HOST_NAME == 'HZ_RD_WUSHUMING':
+	filename = r'd:/workflow_log/workflow.log'
+else:
+	filename = r'/Users/apple/develop/workflow_log/workflow.log'
 logging.basicConfig(level=logging.DEBUG,
                     format='[%(asctime)s]%(levelname)-8s"%(message)s"',
                     datefmt='%Y-%m-%d %a %H:%M:%S',
-                    filename=r'/Users/apple/develop/workflow_log/workflow.log',
+                    filename=filename,
                     filemode='a+')
 
 FIRST_LOGIN = True
