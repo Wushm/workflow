@@ -237,9 +237,21 @@ def refresh(request):
 def get_branch_release_number(vob_branch):
     vob_config = CVobConfig.objects.get(branch = vob_branch)
     return vob_config.release_number
-    
   
-update_all_vob_config()
+    
+def lock(request,id):
+    vob_config = CVobConfig.objects.get(id = id)
+    user = request.user
+    if user.id != vob_config.superAdmin.id:
+        if user.username != 'admin':
+            request.user.message_set.create(message=u"您没有权限进行此操作")
+            return HttpResponseRedirect("../../all/")
+    if(vob_config.isLock):
+        vob_config.isLock = False
+    else:
+        vob_config.isLock = True
+    vob_config.save()
+    return HttpResponseRedirect("../../all/")
 
     
         

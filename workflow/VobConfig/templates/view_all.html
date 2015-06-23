@@ -30,11 +30,11 @@
                 <th><a href="../view/{{o.id}}/">{{o.title}}</a></th>
                 <td>{{o.servers}}</td>
                 <td>{{o.superAdmin.first_name}}</td>
-            {% if o.isLock %}
-                <td>锁定</td>
-            {% else %}
-                <td>已解锁</td>
-            {% endif %}
+				{% if o.isLock %}
+				<td>锁定<a href="../lock/{{o.id}}/">(解锁)</a></td>
+				{% else %}
+				<td>已解锁<a href="../lock/{{o.id}}/">(锁定)</a></td>
+				{% endif %}
             <td>{{o.devStatus}}</td>
 			<td>
 			{% for product in o.product.all %}	
