@@ -1,13 +1,67 @@
 {% extends "base_site.html" %}
 {% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/forms.css{% endblock %}
+{% block extrahead %}
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectBox.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/SelectFilter2.js"></script>
+<link rel="stylesheet" href="/workflow/static/css/ticket.css" type="text/css" />
+{% endblock %}
+{% block coltype %}colM{% endblock %}
+{% block bodyclass %}auth-group change-form{% endblock %}
+{% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../../../">{% trans "Home" %}</a> &rsaquo;{{title}}&rsaquo; 
+</div>{% endblock %}{% endif %}
 
-{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css{% endblock %}
-{% block coltype %}colMS{% endblock %}
-{% block bodyclass %}dashboard{% endblock %}
-{% block breadcrumbs %}{% endblock %}
 {% block content %}
+
+{% if error_message %}
+<p class="errornote">{{ error_message }}</p>
+{% endif %}
 <div id="content-main">
-	
+    <form enctype="multipart/form-data" action method="post" id="prjreport_form" id="release tool">
+    <div>
+        <div id="ticket">
+          <h2 class="summary searchable">产品信息</h2>
+          <table class="properties">
+            <tbody>
+				<tr>	
+					<th> 分支名称</th>
+					<td>{{vob_config.title}}</td>
+				</tr>
+				<tr>	
+					<th> 产品名称</th>
+					<td>{{product.title}}</td>
+				</tr>
+				<tr>	
+					<th> 产品型号</th>
+					<td>{{product.product_name}}</td>
+				</tr>
+				<tr>	
+					<th>产品最后发布版本:</th>
+					<td>{{product.last_release_version}}</td>
+				</tr>
+				<tr>	
+					<th>产品管理员:</th>
+					<td>{{product.product_manager.first_name}}</td>
+				</tr>
+			</tbody>
+		  </table>
+	</div>
+	<h1 class="summary searchable">{{action}}</h1>
+	<div>
+	<fieldset class="module aligned">
+	<div>
+	    <label class="required"> Version Number</label>
+	    {{releaseForm.version_number1}}.{{releaseForm.version_number2}}.{{releaseForm.version_number3}}.{{releaseForm.version_number4}}{{releaseForm.version_number5}}
+	    <input type="submit" id="submit" value='{{action}}' style="width:200px;height:50px;"/>
+	</div>
+	</fieldset>
+	</div>
+	    
+    </div>
+    </form>
 </div>
 {% endblock %}
 

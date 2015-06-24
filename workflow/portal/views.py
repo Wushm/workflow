@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from get_user_info import get_user_info
 
 from workflow.VobConfig.views import update_all_vob_config
-
+from workflow.settings import HOST_NAME
 
 @login_required
 def index(request):
@@ -113,6 +113,25 @@ def login(request):
         password = data['password']
         username = username.lower()
         #域用户认证, admin用户除外
+        #----------------------------------------------------------------
+        if HOST_NAME == 'HZ_RD_WUSHUMING' or HOST_NAME == 'HZ_RD_SERVER':
+            import ldap
+            if username is not 'admin':
+                try:
+                    conn = ldap.initialize('ldap://172.18.9.21')
+                    conn.simple_bind_s('utscn\\'+username, password)
+                    user = _has_user(username)
+                    if not user:#如果用户不存在，创建用户
+                        user = _add_user(username, password)
+                    if user:#更新用户密码，保证使用django内部认证时可以通过
+                        user.set_password(password)
+                        user.save()
+                except:
+                    pass    #auth failed
+        #校验用户信息是否完整，并自动完善
+        if username is not 'admin':
+            _check_and_update_user_info(username)
+        #-------------------------------------------------------------------
         from django.contrib import auth
         user = auth.authenticate(username=username,\
         password=password)
@@ -120,7 +139,7 @@ def login(request):
             auth.login(request, user)
             return HttpResponseRedirect(redirect_to)
         else:
-			error_message=u"您输入的用户名或密码不正确，请使用域账户/密码登陆！"
+            error_message=u"您输入的用户名或密码不正确，请使用域账户/密码登陆！"
     return render_to_response('login.html', {'error_message': error_message,
                                              'set_email':set_email,
                                              'title': u'统一认证管理中心'}, context_instance=template.RequestContext(request))

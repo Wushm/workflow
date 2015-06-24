@@ -15,6 +15,9 @@ class CProduct(models.Model):
     #分支的超级管理员，只有此管理员才有权限锁住分支
     product_manager= models.ForeignKey(User,verbose_name="产品管理员",related_name="product manager",\
                                       help_text="此产品的管理员，产品发布版本有此管理员负责")
+    
+    product_branch = models.CharField(max_length=100,verbose_name = u"产品branch",\
+                                      help_text="产品release对应的branch名称")
 
     def __str__(self):
         return self.title
@@ -26,3 +29,4 @@ try:
     admin.site.register(CProduct)
 except:
     pass
+
