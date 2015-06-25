@@ -14,4 +14,6 @@ urlpatterns = patterns('workflow.VobConfig',
         (r'^view/(?P<id>\d+)/$','views.view'),
         #(r'^refresh/$','views.refresh'),
         #(r'^update/(?P<id>\d+)/$','views.update'),
+        (r'^lock/(?P<id>\d+)/$','views.lock'),
+        
 )
