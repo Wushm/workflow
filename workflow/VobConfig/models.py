@@ -21,7 +21,7 @@ class CVobConfig(models.Model):
                                       help_text="分支branch name , 按照clearcase branch type对应的branch名称填写,请加上后缀@\OnsPlatform")
     #分支开权限服务器
     servers = models.CharField(max_length = 50,verbose_name=u"分支服务器",\
-                                      help_text="默认分支服务器为hz_rd_server")
+                                      help_text="默认分支服务器为hz_rd_build")
     #分支网页选择名称
     choices = models.CharField(max_length = 100,verbose_name=u'分支网页选择名称',\
                                       help_text="电子流申请时，显示的分支名称,建议与branch name 一致")

@@ -46,17 +46,22 @@
 					<th>产品管理员:</th>
 					<td>{{product.product_manager.first_name}}</td>
 				</tr>
+    				<tr>	
+					<th>产品release branch:</th>
+					<td>{{product.product_branch}}</td>
+				</tr>
+					
 			</tbody>
 		  </table>
 	</div>
-	<h1 class="summary searchable">{{action}}</h1>
+	<h1 class="summary searchable"></h1>
 	<div>
 	<fieldset class="module aligned">
 	<div>
-		<h2 style="text-align:center;"> 选择发布版本号:</h2>
+		<h2 style="text-align:center;"> 发布版本</h2>
 		<div style="text-align:center;">
-	    {{releaseForm.version_number1}}.{{releaseForm.version_number2}}.{{releaseForm.version_number3}}.{{releaseForm.version_number4}}{{releaseForm.version_number5}}
-	    <input type="submit" id="submit" value='{{action}}' style="width:200px;height:50px;"/>
+		选择发布版本号：{{releaseForm.version_number1}}.{{releaseForm.version_number2}}.{{releaseForm.version_number3}}.{{releaseForm.version_number4}}{{releaseForm.version_number5}}
+		<input type="submit" id="submit" value='{{button_view}}' style="width:200px;height:50px;"/>
 		</div>
 	</div>
 	</fieldset>

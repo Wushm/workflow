@@ -102,3 +102,28 @@ class CReleasToolForm(forms.Form):
     version_number5 = forms.ChoiceField(widget=forms.widgets.Select(attrs={}),\
             choices=version_number5_choices)
         
+        
+    def init_version_choices(self,version):
+        tmp_version = None
+        tmp_sp = None
+        version_and_sp = version.split('_')
+        if len(version_and_sp) == 1:
+            tmp_version = version_and_sp[0]
+        elif len(version_and_sp) == 2:
+            tmp_version = version_and_sp[0]
+            tmp_sp = version_and_sp[1]
+        else:
+            return False
+        version_list = tmp_version.split('.')
+        self.fields['version_number1'].initial = version_list[0]
+        self.fields['version_number2'].initial  = version_list[1]
+        self.fields['version_number3'].initial  = version_list[2]
+        self.fields['version_number4'].initial  = version_list[3]
+        if tmp_sp == None:
+            self.fields['version_number5'].initial = None
+        else:
+            self.fields['version_number5'].initial = '_' + tmp_sp
+        
+           
+        
+        

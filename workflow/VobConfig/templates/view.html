@@ -41,7 +41,15 @@
 
 				<tr>
 					<th>分支开发状态</th>
-					<td>{{vob_config.devStatus}}</td>
+					{% ifequal  vob_config.devStatus 'maintain' %}
+					<td>维护中</td>
+					{% endifequal %}
+					{% ifequal  vob_config.devStatus 'close' %}
+					<td>已关闭</td>
+					{% endifequal %}
+					{% ifequal  vob_config.devStatus 'dev' %}
+					<td>开发中</td>
+					{% endifequal %}
 				</tr>
 
 				<tr>

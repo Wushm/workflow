@@ -6,20 +6,20 @@
 {% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../">{% trans "Home" %}</a> &rsaquo; vob config 管理</div>{% endblock %}{% endif %}
 {% block content %}
 <div id="content-main">
-		<!---
+		
 <ul class="object-tools">
     <li>
         <a href="../add/" class="addlink">增加 vob_config</a>
     </li>
 </ul>
-		-->
+		
 <table cellspacing="0">
 	<thead>
 		<tr>
 			<th>分支名称</th>
+		        <th>分支锁定状态</th>
 			<th>服务器名称</th>
 			<th>分支管理员</th>
-			<th>分支锁定状态</th>
 			<th>分支开发状态</th>
 			<th>分支产品</th>
 		</tr>
@@ -27,20 +27,59 @@
 	<tbody>
 	{% for o in vob_config%}
 	    <tr class="{% cycle row1,row2 %}">
-                <th><a href="../view/{{o.id}}/">{{o.title}}</a></th>
-                <td>{{o.servers}}</td>
-                <td>{{o.superAdmin.first_name}}</td>
+		{% ifequal  o.devStatus 'close' %}
+		<th style="color:gray">{{o.title}}</th>
 				{% if o.isLock %}
-				<td>锁定<a href="../lock/{{o.id}}/">(解锁)</a></td>
+						<td style="color:gray">锁定</td>
 				{% else %}
-				<td>已解锁<a href="../lock/{{o.id}}/">(锁定)</a></td>
+						<td style="color:gray">已解锁</td>
 				{% endif %}
-            <td>{{o.devStatus}}</td>
-			<td>
-			{% for product in o.product.all %}	
-			<a href="../../product_manage/product/{{o.id}}/{{product.id}}/">{{product.title}}({{product.product_manager.first_name}}) | </a>
-			{% endfor %}
-			</td>
+				<td style="color:gray">{{o.servers}}</td>
+				<td style="color:gray">{{o.superAdmin.first_name}}</td>
+				<td style="color:gray">已关闭</td>
+				<td style="color:gray">
+						{% for product in o.product.all %}	
+								{{product.title}}({{product.product_manager.first_name}}) |
+						{% endfor %}
+				</td>
+		</td>
+	
+		{% endifequal %}
+		
+		{% ifequal  o.devStatus 'maintain' %}
+				<th><a href="../view/{{o.id}}/">{{o.title}}</a></th>
+				{% if o.isLock %}
+						<td>锁定<a href="../lock/{{o.id}}/">(解锁)</a></td>
+				{% else %}
+						<td>已解锁<a href="../lock/{{o.id}}/">(锁定)</a></td>
+				{% endif %}
+				<td>{{o.servers}}</td>
+				<td>{{o.superAdmin.first_name}}</td>
+				<td>维护中</td>
+				<td>
+				{% for product in o.product.all %}	
+				<a href="../../product_manage/product/{{o.id}}/{{product.id}}/">{{product.title}}({{product.product_manager.first_name}}) | </a>
+				{% endfor %}
+				</td>
+		</td>
+		{% endifequal %}
+		
+		{% ifequal  o.devStatus 'dev' %}
+				<th><a href="../view/{{o.id}}/">{{o.title}}</a></th>
+				{% if o.isLock %}
+						<td>锁定<a href="../lock/{{o.id}}/">(解锁)</a></td>
+				{% else %}
+						<td>已解锁<a href="../lock/{{o.id}}/">(锁定)</a></td>
+				{% endif %}
+				<td>{{o.servers}}</td>
+				<td>{{o.superAdmin.first_name}}</td>
+				<td style="font-weight:bold">开发中</td>
+				<td>
+				{% for product in o.product.all %}	
+				<a href="../../product_manage/product/{{o.id}}/{{product.id}}/">{{product.title}}({{product.product_manager.first_name}}) | </a>
+				{% endfor %}
+				</td>
+		{% endifequal %}
 	    </tr>
 	{% endfor %}
 	</tbody>

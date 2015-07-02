@@ -32,13 +32,22 @@ def release(request,vob_config_id,id):
     product = CProduct.objects.get(id=id)
     releaseForm = CReleasToolForm()
     action = request.GET.get('action')
+    
+    button_view = '';
+    if action == 'all_release':
+        button_view = '完整发布'
+    elif action == 'ready_release':
+        button_view = '预发布'
+    elif action == 'update_version':
+        button_view = '更新版本号'
+    releaseForm.init_version_choices(product.last_release_version)
     error_message = ""
     cmd = ''
     count = 1
     ret = 0
     if request.POST:
         version = request.POST['version_number1'] + "." + request.POST['version_number2'] + "." + request.POST['version_number3'] + "." + request.POST['version_number4'] + request.POST['version_number5']
-        if HOST_NAME == 'HZ_RD_WUSHUMING':
+        if HOST_NAME == 'HZ_RD_WUSHUMING' or HOST_NAME == 'HZ_RD_SERVER':
             while(count):
                 if action == 'all_release':
                         cmd = r"D:\TN_version\auto_release.bat"+" "+product.product_name+" " + vob_config.title +" "+version+" "+ 'hz_rd_server'
@@ -121,12 +130,16 @@ def release(request,vob_config_id,id):
             else:
                 error_message = error_message + 'no run web server'
                 
+            if (ret == 0):
+                product.last_release_version = version
+                product.save()
        
     return render_to_response("release.html",\
             {'title':'release version',\
             'product':product,\
             'vob_config':vob_config,\
             'action':action,\
+            'button_view':button_view,\
             'releaseForm':releaseForm,\
             'error_message': error_message,\
             },\
