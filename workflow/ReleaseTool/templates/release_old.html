@@ -1,0 +1,513 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css" />{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}dashboard{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+
+<script>
+function set_disabled_checkbox()
+{
+	document.getElementById("release").style.display = "block";
+	document.getElementById("doc").checked = false;
+	document.getElementById("doc").disabled = "disabled";
+	document.getElementById("server").checked = false;
+	document.getElementById("server").disabled = "disabled";
+	document.getElementById("mail").checked = false;
+	document.getElementById("mail").disabled = "disabled";
+}
+
+function set_enabled_checkbox()
+{
+	document.getElementById("release").style.display = "block";
+	document.getElementById("doc").checked = true;
+	document.getElementById("doc").disabled = false;
+	document.getElementById("server").checked = true;
+	document.getElementById("server").disabled = false;
+	document.getElementById("mail").checked = true;
+	document.getElementById("mail").disabled = false;
+}
+
+function chg_action(){
+var sel = document.getElementById('action');
+if(document.getElementById("select_product").value=="onu")
+{
+	if(document.getElementById("select_branch").value=="common_pon"){
+		sel.options.length = 0;
+		sel.options.add(new Option("release version","release version")); 
+		set_disabled_checkbox();
+	}
+	else{
+		sel.options.length = 0;
+		sel.options.add(new Option("update version id","update version id"));
+		sel.options.add(new Option("release version","release version")); 
+		sel.options.add(new Option("get pre-release version","get pre-release version")); 
+		
+		document.getElementById("release").style.display = "none";
+	}
+}
+}
+
+function chg_branch(){
+var sel = document.getElementById('select_branch');
+
+if(document.getElementById("select_product").value=="703c"){
+sel.options.length = 0;
+sel.options.add(new Option("uniform(TN7xx_Universe_Unification_Base)","uniform")); 
+sel.options.add(new Option("uniform_cht(TN7xx_V2.2.3.x)","uniform_cht"));
+}
+else if(document.getElementById("select_product").value=="703c_old"){
+sel.options.length = 0;
+sel.options.add(new Option("uniform(TN7xx_Universe_Unification_Base)","uniform")); 
+sel.options.add(new Option("uniform_maintain(Uniform_V2.2.2.4_base)","uniform_maintain")); 
+}
+else if(document.getElementById("select_product").value=="703c_3"){
+sel.options.length = 0;
+sel.options.add(new Option("opcc3(opcc3_dev)","opcc3")); 
+}
+else if(document.getElementById("select_product").value=="703"){
+sel.options.length = 0;
+sel.options.add(new Option("uniform(TN7xx_Universe_Unification_Base)","uniform")); 
+sel.options.add(new Option("uniform_maintain(Uniform_V2.2.2.4_base)","uniform_maintain")); 
+}
+else if(document.getElementById("select_product").value=="701")
+{
+sel.options.length = 0;
+sel.options.add(new Option("uniform(TN7xx_Universe_Unification_Base)","uniform")); 
+sel.options.add(new Option("701maintain(TN701_v2.2.2.6_maintain)","701maintain"));
+}
+else if(document.getElementById("select_product").value=="705")
+{
+sel.options.length = 0;
+sel.options.add(new Option("uniform(TN7xx_Universe_Unification_Base)","uniform")); 
+sel.options.add(new Option("uniform_maintain(Uniform_V2.2.2.4_base)","uniform_maintain")); 
+sel.options.add(new Option("sbb_main(TN7X5_SBB_V1.2.0_Dev)","sbb_main")); 
+sel.options.add(new Option("sbb_R1.5(TN705_V1.5.0.6_maintain)","sbb_r15")); 
+sel.options.add(new Option("sbb_1.5.0.X_maintain(TN705_V1.5.0.16_maintain)","sbb_150x_maintain")); 
+sel.options.add(new Option("sbb_15base(sbb_V1.3.2.15_base)","sbb_15base")); 
+sel.options.add(new Option("sbb_18base(sbb_V1.3.2.18_base)","sbb_18base")); 
+sel.options.add(new Option("705_3_2_0(705_3.2.0.19BASE)","705_3_2_0")); 
+}
+else if(document.getElementById("select_product").value=="725")
+{
+sel.options.length = 0;
+sel.options.add(new Option("uniform(TN7xx_Universe_Unification_Base)","uniform")); 
+sel.options.add(new Option("uniform_maintain(Uniform_V2.2.2.4_base)","uniform_maintain")); 
+sel.options.add(new Option("sbb_main(TN7X5_SBB_V1.2.0_Dev)","sbb_main")); 
+}
+else if(document.getElementById("select_product").value=="735")
+{
+sel.options.length = 0;
+sel.options.add(new Option("tn735(feat_tn735)","tn735")); 
+sel.options.add(new Option("tn735_213_maintain(TN735_V2.1.3_maintain)","tn735_213_maintain")); 
+//sel.options.add(new Option("tn735_2128_maintain(TN735_V2.1.2.8_maintain)","tn735_2128_maintain")); 
+//sel.options.add(new Option("tn735_2135_maintain(TN735_V2.1.3.5_maintain)","tn735_2135_maintain")); 
+}
+else if(document.getElementById("select_product").value=="765")
+{
+sel.options.length = 0;
+sel.options.add(new Option("sbb_maintain(TN705_V1.3.2.14)","sbb_maintain")); 
+sel.options.add(new Option("765_maintain(TN765_R1.2.1_maintenance)","765maintain")); 
+sel.options.add(new Option("l3vpn(Tn765_l3vpn)","l3vpn")); 
+sel.options.add(new Option("l3vpn_2_1_1(Tn765_l3vpn_private)","l3vpn_2_1_1")); 
+sel.options.add(new Option("765_1_2_2(765_1.2.2.11_SP2BASE)","765_1_2_2"));
+}
+else if(document.getElementById("select_product").value=="725E")
+{
+sel.options.length = 0;
+sel.options.add(new Option("725e(725E_dev)","725e")); 
+sel.options.add(new Option("uniform(TN7xx_Universe_Unification_Base)","uniform"));
+}
+else if(document.getElementById("select_product").value=="4606")
+{
+sel.options.length = 0;
+sel.options.add(new Option("GPON_R1.2","bbs4606_gpon")); 
+sel.options.add(new Option("EPON_R2.1","bbs4606_epon"));
+}
+else if(document.getElementById("select_product").value=="3160")
+{
+sel.options.length = 0;
+sel.options.add(new Option("3160","c3160")); 
+}
+else if(document.getElementById("select_product").value=="netring")
+{
+sel.options.length = 0;
+sel.options.add(new Option("NR10000","NR10000")); 
+sel.options.add(new Option("NR2500XC","NR2500XC")); 
+sel.options.add(new Option("NR600ES","NR600ES")); 
+sel.options.add(new Option("NR40K","NR40K")); 
+}
+else if(document.getElementById("select_product").value=="onu")
+{
+sel.options.length = 0;
+sel.options.add(new Option("onu204i_k7","onu204i_k7")); 
+sel.options.add(new Option("common_pon","common_pon")); 
+}
+else if(document.getElementById("select_product").value=="703a")
+{
+sel.options.length = 0;
+sel.options.add(new Option("703a(STN703A_DEV)","703a")); 
+}
+else if(document.getElementById("select_product").value=="704a")
+{
+sel.options.length = 0;
+sel.options.add(new Option("703a(STN703A_DEV)","703a")); 
+}
+
+var act = document.getElementById('action');
+if(document.getElementById("select_product").value=="onu" || document.getElementById("select_product").value=="netring")
+{
+	if(document.getElementById("select_product").value=="netring" || document.getElementById("select_branch").value=="common_pon"){
+		
+		act.options.length = 0;
+		act.options.add(new Option("release version","release version")); 
+		
+		set_disabled_checkbox();
+	}
+	else{
+		act.options.length = 0;
+		act.options.add(new Option("update version id","update version id"));
+		act.options.add(new Option("release version","release version")); 
+		act.options.add(new Option("get pre-release version","get pre-release version")); 
+		
+		document.getElementById("release").style.display = "none";
+	}
+}
+else
+{
+	act.options.length = 0;
+	act.options.add(new Option("update version id","update version id"));
+	act.options.add(new Option("release version","release version")); 
+	act.options.add(new Option("get pre-release version","get pre-release version")); 
+	
+	document.getElementById("release").style.display = "none";
+}
+}
+
+
+</script>
+
+<div id="content-main">
+
+<form method="get" action="/release/">
+	
+  <tr> 
+    <td width="75%" align="left"><b>Product:</b></td> 
+    <td width="75%" align="left">
+    	<select id="select_product" name="product" OnChange="chg_branch()">
+    		<option value="701">701</option>  				
+				<option value="703c">703c</option> 
+				<option value="703c_old">703c_old</option> 
+				<option value="703c_3">703c_3</option> 
+				<option value="703">703</option>
+				<option value="705">705</option> 
+				<option value="725">725</option> 
+				<option value="735">735</option>
+				<option value="765">765</option>
+				<option value="725E">725E</option>
+				<option value="4606">4606</option>  
+				<option value="3160">3160</option> 
+                <option value="703a">703a</option>  
+                <option value="704a">704a</option>  				
+				<option value="netring">netring</option>
+				<option value="onu">onu</option>
+			</select>
+		</td> 
+<br>
+</tr> 
+<tr> 
+  
+   <tr> 
+    <td width="25%" align="left"><b>Branch:</b></td>
+    <td width="75%" align="left">
+    	<select id="select_branch" name="branch" OnChange="chg_action()"> 			
+				<option value="uniform">uniform(TN7xx_Universe_Unification_Base)</option>
+				<option value="701maintain">701maintain(TN701_v2.2.2.6_maintain)</option>
+	</select>
+		</td> 
+  </tr> 
+  <tr> 
+<br>	
+ 	<tr> 
+ 		<td width="25%" align="left"><b>Version_No:</b></td> 
+    <td width="75%" height="30" align="left"> 
+    	<select id="select_ver_1" name="select_ver_1"> 
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+			</select>
+			.
+			<select id="select_ver_2" name="select_ver_2">
+				<option value="0">0</option> 
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+			</select>
+			.
+			<select id="select_ver_3" name="select_ver_3"> 
+				<option value="0">0</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+				<option value="15">15</option>
+			</select>
+			.
+				<select id="select_ver_4" name="select_ver_4"> 
+				<option value="0">0</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+				<option value="15">15</option>
+				<option value="16">16</option>
+				<option value="17">17</option>
+				<option value="18">18</option>
+				<option value="19">19</option>
+				<option value="20">20</option>
+				<option value="21">21</option>
+				<option value="22">22</option>
+				<option value="23">23</option>
+				<option value="24">24</option>
+				<option value="25">25</option>
+				<option value="26">26</option>
+				<option value="27">27</option>
+				<option value="28">28</option>
+				<option value="29">29</option>
+				<option value="30">30</option>
+				<option value="31">31</option>
+				<option value="32">32</option>
+				<option value="33">33</option>
+				<option value="34">34</option>
+				<option value="35">35</option>
+				<option value="36">36</option>
+				<option value="37">37</option>
+				<option value="38">38</option>
+				<option value="39">39</option>
+				<option value="40">40</option>
+			</select>
+				<select id="select_ver_sp" name="select_ver_sp"> 
+				<option value="">None</option>
+				<option value="_sp1">_sp1</option>
+				<option value="_sp2">_sp2</option>
+				<option value="_sp3">_sp3</option>
+				<option value="_sp4">_sp4</option>
+				<option value="_sp5">_sp5</option>
+				<option value="_sp6">_sp6</option>
+				<option value="_sp7">_sp7</option>
+				<option value="_sp8">_sp8</option>
+				<option value="_sp9">_sp9</option>
+				<option value="_sp10">_sp10</option>
+				<option value="_sp11">_sp11</option>
+				<option value="_sp12">_sp12</option>
+				<option value="_sp13">_sp13</option>
+				<option value="_sp14">_sp14</option>
+				<option value="_sp15">_sp15</option>
+				<option value="_sp16">_sp16</option>
+				<option value="_sp17">_sp17</option>
+				<option value="_sp18">_sp18</option>
+				<option value="_sp19">_sp19</option>
+				<option value="_sp20">_sp20</option>
+				<option value="_sp21">_sp21</option>
+				<option value="_sp22">_sp22</option>
+				<option value="_sp23">_sp23</option>
+				<option value="_sp24">_sp24</option>
+				<option value="_sp25">_sp25</option>
+				<option value="_sp26">_sp26</option>
+				<option value="_sp27">_sp27</option>
+				<option value="_sp28">_sp28</option>
+				<option value="_sp29">_sp29</option>
+				<option value="_sp30">_sp30</option>
+				<option value="_sp31">_sp31</option>
+				<option value="_sp32">_sp32</option>
+				<option value="_sp33">_sp33</option>
+				<option value="_sp34">_sp34</option>
+				<option value="_sp35">_sp35</option>
+				<option value="_sp36">_sp36</option>
+				<option value="_sp37">_sp37</option>
+				<option value="_sp38">_sp38</option>
+				<option value="_sp39">_sp39</option>
+				<option value="_sp40">_sp40</option>
+				<option value="_sp41">_sp41</option>
+				<option value="_sp42">_sp42</option>
+				<option value="_sp43">_sp43</option>
+				<option value="_sp44">_sp44</option>
+				<option value="_sp45">_sp45</option>
+				<option value="_sp46">_sp46</option>
+				<option value="_sp47">_sp47</option>
+				<option value="_sp48">_sp48</option>
+				<option value="_sp49">_sp49</option>
+				<option value="_sp50">_sp50</option>
+			</select>			
+    </td> 
+  </tr> 
+<br>
+  <tr> 
+    <td width="25%" align="left"><b>Bamboo Server to Get Version:</b></td>
+    <td width="75%" align="left">
+    	<select id="bamboo_server" name="bamboo_server"> 
+				<option value="hz_rd_server">hz_rd_server</option>			
+				<option value="172.21.151.222">hz_rd_build</option>
+			</select>
+		</td> 
+  </tr>
+  <br>
+   <tr> 
+    <td width="25%" align="left"><b>Action:</b></td> 
+    <td width="75%" align="left">
+    	</select>
+				<select id="action" name="action" onchange="chg()"> 				
+				<option value="update version id">update version id</option>
+				<option value="release version">release version</option>
+				<option value="get pre-release version">get pre-release version</option>
+			</select>
+		</td> 
+  </tr> 
+  <tr> 
+
+<div id ="release" style= "display:none">
+  <br />
+  Get newest version:
+  <input type="checkbox" name="version" id="version" value="version" checked="checked" />
+  <br />
+  Reslove MR and Generate release notes: 
+  <input type="checkbox" name="doc" id="doc" value="doc" checked="checked"/>
+  <br />
+  Upload to ftp server: 
+  <input type="checkbox" name="server" id="server" value="server" checked="checked"/>
+  <br />
+  Send release mail: 
+  <input type="checkbox" name="mail" id="mail" value="mail" checked="checked"/>
+  <br />
+  Make lable: 
+  <input type="checkbox" name="lable" id="lable" value="lable" checked="checked"/>
+</div>
+
+<script  type= "text/javascript ">   
+ function chg(){ 
+  document.getElementById("release").style.display = "none"; 
+  if(document.getElementById("action").selectedIndex == 1) { 
+    document.getElementById("release").style.display = "block"; 
+    set_enabled_checkbox();
+  }
+} 
+</script>
+  <tr>
+  	<td width="25%" align="center"><br/></td> 
+    <td width="50%" align="center"><br/></td> 
+  </tr>
+	
+  <tr align="center">
+			<td>
+				<br>
+				<input type="submit" value="Submit" style="width:200px;height:50px;"/>
+				<br>
+			</td>
+	</tr>
+  <tr>
+  	<td width="25%" align="center"><br/></td> 
+    <td width="50%" align="center"><br/></td> 
+  </tr>
+	</form>
+
+
+{% if app_list %}
+    {% for app in app_list %}
+        <div class="module">
+        <table summary="{% blocktrans with app.name as name %}Models available in the {{ name }} application.{% endblocktrans %}">
+        <caption><a href="{{ app.app_url }}" class="section">{% blocktrans with app.name as name %}{{ name }}{% endblocktrans %}</a></caption>
+        {% for model in app.models %}
+            <tr>
+            {% if model.perms.change %}
+                <th scope="row"><a href="{{ model.admin_url }}">{{ model.name }}</a></th>
+            {% else %}
+                <th scope="row">{{ model.name }}</th>
+            {% endif %}
+
+            {% if model.perms.add %}
+                <td><a href="{{ model.admin_url }}add/" class="addlink">{% trans 'Add' %}</a></td>
+            {% else %}
+                <td>&nbsp;</td>
+            {% endif %}
+
+            {% if model.perms.change %}
+                <td><a href="{{ model.admin_url }}" class="changelink">{% trans 'Change' %}</a></td>
+            {% else %}
+                <td>&nbsp;</td>
+            {% endif %}
+            </tr>
+        {% endfor %}
+        </table>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>{% trans "You don't have permission to edit anything." %}</p>
+{% endif %}
+</div>
+{% endblock %}
+
+
+
+
+
+{% block sidebar %}
+<div id="content-related">
+    <div class="module" id="recent-actions-module">
+        <h2>{% trans 'Recent Actions' %}</h2>
+        <h3>{% trans 'My Actions' %}</h3>
+            {% load log %}
+            {% get_admin_log 10 as admin_log for_user user %}
+            {% if not admin_log %}
+            <p>{% trans 'None available' %}</p>
+            {% else %}
+            <ul class="actionlist">
+            {% for entry in admin_log %}
+            <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
+                {% if entry.is_deletion or not entry.get_admin_url %}
+                    {{ entry.object_repr }}
+                {% else %}
+                    <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                {% endif %}
+                <br/>
+                {% if entry.content_type %}
+                    <span class="mini quiet">{% filter capfirst %}{% trans entry.content_type.name %}{% endfilter %}</span>
+                {% else %}
+                    <span class="mini quiet">{% trans 'Unknown content' %}</span>
+                {% endif %}
+            </li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+    </div>
+</div>
+{% endblock %}
