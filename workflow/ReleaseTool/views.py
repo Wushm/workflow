@@ -11,6 +11,8 @@ from workflow.VobConfig.models import CVobConfig
 from workflow.Product.models import CProduct
 from workflow.ReleaseTool.form import CReleasToolForm
 from workflow.settings import HOST_NAME
+import os
+import re
 
 release_history = r"D:\TN_version\release_history.txt"
 
@@ -50,81 +52,75 @@ def release(request,vob_config_id,id):
         if HOST_NAME == 'HZ_RD_WUSHUMING' or HOST_NAME == 'HZ_RD_SERVER':
             while(count):
                 if action == 'all_release':
-                        cmd = r"D:\TN_version\auto_release.bat"+" "+product.product_name+" " + vob_config.title +" "+version+" "+ 'hz_rd_server'
+			if True == IsVersionReleased(product.product_name,product.product_branch,version):
+                            error_message = '版本已经发布成功，无法再次发布，如果需要再次发布请删除历史数据'
+                            break
+
+                        cmd = r"D:\TN_version\auto_release.bat"+" "+product.product_name+" " + product.product_branch  +" "+version+" "+ 'hz_rd_server'
                         ret = os.system(cmd)
                         if (0==ret):
-                            message = 'upgrade version no "' + 'product:' + product.product_name + 'branch:' + vob_config.title + 'vresion no:' + version + '"' + 'sucess'
+                            message = 'upgrade version no "' + 'product:' + product.product_name + 'branch:' + product.product_branch  + 'vresion no:' + version + '"' + 'sucess'
                             request.user.message_set.create(message=message)
                         else:
                             error_message = 'run the cmd:' + '"' + cmd + '"' + 'fail'
                             break
-                        if True == IsVersionReleased(product,branch,version):
-                            error_message = '版本已经发布成功，无法再次发布，如果需要再次发布请删除历史数据'
-                            break
                         
-                        if True == IsVersionReleased(product,branch,version):
-                            break
-                        cmd = r"python D:\heavysmoker\workspace\suites\suite_version_release\release_note.py " + product.product_name + " " + vob_config.title + " " + version + " " + "resolve"
+                        cmd = r"python D:\heavysmoker\workspace\suites\suite_version_release\release_note.py " + product.product_name + " " + product.product_branch  + " " + version + " " + "resolve"
                         ret = os.system(cmd)
                         if (0==ret):
-                            message = 'release_note"' + 'product:' + product.product_name + 'branch:' + vob_config.title + 'vresion no:' + version + '"' + 'resolve MR and generate release notes success!'
+                            message = 'release_note"' + 'product:' + product.product_name + 'branch:' + product.product_branch  + 'vresion no:' + version + '"' + 'resolve MR and generate release notes success!'
                             request.user.message_set.create(message=message)
                         else:
                             error_message = '生成Release note 文件出错'
                             break
                         
-                        if True == IsVersionReleased(product,branch,version):
-                            break
                         cmd = r"D:\TN_version\upload_ftpserver.bat"+" "+product.product_name
                         ret = os.system(cmd)
                         if (0==ret):
-                            message = 'upload_ftpserver "' + 'product:' + product.product_name + 'branch:' + vob_config.title + 'vresion no:' + version + '"' 
+                            message = 'upload_ftpserver "' + 'product:' + product.product_name + 'branch:' + product.product_branch  + 'vresion no:' + version + '"' 
                             request.user.message_set.create(message=message)
                         else:
                             error_message = '将文件传输到ftp服务器时出错'
                             break
-                        
-                        if True == IsVersionReleased(product,branch,version):
-                            break
-                        cmd = r"python D:\heavysmoker\workspace\suites\suite_version_release\release_mail.py " + product.product_name + " " + vob_config.title + " " + version
+
+                        cmd = r"python D:\heavysmoker\workspace\suites\suite_version_release\release_mail.py " + product.product_name + " " + product.product_branch  + " " + version
                         ret = os.system(cmd)
                         if (0==ret):
-                            message = 'release_mail "' + 'product:' + product.product_name + 'branch:' + vob_config.title + 'vresion no:' + version + '"' 
+                            message = 'release_mail "' + 'product:' + product.product_name + 'branch:' + product.product_branch  + 'vresion no:' + version + '"' 
                             request.user.message_set.create(message=message)
                         else:
                             error_message = 'release  mail  失败'
                             break
                         
-                        if True == IsVersionReleased(product,branch,version):
-                            break
-                        cmd = r"D:\TN_version\make_label.bat"+" "+product.prodect_name+" "+ vob_config.title +" "+version+" "+local_server
+                        cmd = r"D:\TN_version\make_label.bat"+" "+product.product_name+" "+ product.product_branch  +" "+version+" "+ 'hz_rd_server'
                         ret = os.system(cmd)
                         if (0==ret):
-                            message = 'make_label "' + 'product:' + product.product_name + 'branch:' + vob_config.title + 'vresion no:' + version + '"' 
+                            message = 'make_label "' + 'product:' + product.product_name + 'branch:' + product.product_branch  + 'vresion no:' + version + '"' 
                             request.user.message_set.create(message=message)
                         else:
                             error_message = 'make_label 失败'
                             break
+			record_version(product.product_name,product.product_branch,version)
                         
                 elif action == 'update_version':
                     cmd = "D:\TN_version\upgrade_version_no.bat"+" "+ product.product_name +" "+ vob_config.title +" "+ version
                     ret = os.system(cmd)
                     if (0==ret):
-                        message = 'upgrade version no "' + 'product:' + product.product_name + 'branch:' + vob_config.title + 'vresion no:' + version + '"' + 'sucess'
+                        message = 'update_version:"' + 'product:' + product.product_name + 'branch:' + product.product_branch + 'vresion no:' + version + '"' + 'sucess'
                         request.user.message_set.create(message=message)
                         break
                     else:
-                        error_message = 'run the cmd:' + '"' + cmd + '"' + 'fail'
+                        error_message = 'run the cmd:' + '"' + cmd + '"' + ' fail'
                         break
                 elif action == 'ready_release':
-                    cmd = r"D:\TN_version\auto_release.bat"+" "+product+" "+branch+" "+version+" "+bamboo_server
+                    cmd = r"D:\TN_version\auto_release.bat" + " " + product.product_name +" " + product.product_branch + " " + version +" "+ 'hz_rd_server'
                     ret = os.system(cmd)	    
                     if (0==ret):
-                        html+='product:%s branch:%s get newest version success!'%(product,branch) + r'<br /><br />'
+                        message = 'ready_release:"' + 'product:' + product.product_name + 'branch:' + product.product_branch + 'vresion no:' + version + '"' + 'sucess'
+			request.user.message_set.create(message=message)
                         break
                     else:
-                        html+='product:%s branch:%s get newest version fail!'%(product,branch) + r'<br /><br />'+ 'Please contact admin:QM Team'
-                        request.user.message_set.create(message=u"ready_release")
+                        error_message = 'run th cmd:' + '"' + cmd + '"'  + ' fail'
                         break
                 count = count - 1       
             if (ret == 0):
@@ -163,21 +159,21 @@ def record_version(product,branch,version):
 
 def release_old(request):
     if request.POST:
-        username = request.GET.get('username', None)
-        product = request.GET.get('product', None)
-        branch = request.GET.get('branch', None)
-        ver_1 = request.GET.get('select_ver_1', None)
-        ver_2 = request.GET.get('select_ver_2', None)
-        ver_3 = request.GET.get('select_ver_3', None)
-        ver_4 = request.GET.get('select_ver_4', None)
-        ver_sp = request.GET.get('select_ver_sp', None)
-        action = request.GET.get('action', None)
-        get_version = request.GET.get('version', None)
-        generate_doc = request.GET.get('doc', None)
-        upload_server = request.GET.get('server', None)
-        send_mail = request.GET.get('mail', None)
-        make_lable = request.GET.get('lable', None)
-        bamboo_server = request.GET.get('bamboo_server', None)
+        username = request.user.first_name
+        product = request.POST['product']
+        branch = request.POST['branch']
+        ver_1 = request.POST['select_ver_1']
+        ver_2 = request.POST['select_ver_2']
+        ver_3 = request.POST['select_ver_3']
+        ver_4 = request.POST['select_ver_4']
+        ver_sp = request.POST['select_ver_sp']
+        action = request.POST['action']
+        get_version = request.POST['version']
+        generate_doc = request.POST['doc']
+        upload_server = request.POST['server']
+        send_mail = request.POST['mail']
+        make_lable = request.POST['lable']
+        bamboo_server = request.POST['bamboo_server']
         local_server = os.getenv('computername').lower()
         print "bamboo_server is " + bamboo_server
         print "local server is " + local_server

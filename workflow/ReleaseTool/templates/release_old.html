@@ -117,6 +117,8 @@ sel.options.add(new Option("765_maintain(TN765_R1.2.1_maintenance)","765maintain
 sel.options.add(new Option("l3vpn(Tn765_l3vpn)","l3vpn")); 
 sel.options.add(new Option("l3vpn_2_1_1(Tn765_l3vpn_private)","l3vpn_2_1_1")); 
 sel.options.add(new Option("765_1_2_2(765_1.2.2.11_SP2BASE)","765_1_2_2"));
+sel.options.add(new Option("nec_765(765_R2_1_1)","765_nec_2_1_1"));
+sel.options.add(new Option("sbb_765(765_R2_1_1_8SP3)","sbb_765_2_1_1_8_sp3"));
 }
 else if(document.getElementById("select_product").value=="725E")
 {
@@ -195,7 +197,7 @@ else
 
 <div id="content-main">
 
-<form method="get" action="/release/">
+<form enctype="multipart/form-data" action method="post" id="prjreport_form" id="release tool">
 	
   <tr> 
     <td width="75%" align="left"><b>Product:</b></td> 

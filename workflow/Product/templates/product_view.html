@@ -50,7 +50,7 @@
 {% if can_release %}
     <input type="hidden" id="action" name="action" value="" />
     <input type="submit" value="发布版本" name="_release" style="width:200px;height:50px;" onclick="document.getElementById('action').value='all_release'"/>
-    <input type="submit" value="更新versionId" name="_update_version_id"  style="width:200px;height:50px;" onclick="document.getElementById('action').value='update_version'"/>
+    <input type="submit" value="更新版本号" name="_update_version_id"  style="width:200px;height:50px;" onclick="document.getElementById('action').value='update_version'"/>
     <input type="submit" value="预发布" name="_release_ready"  style="width:200px;height:50px;" onclick="document.getElementById('action').value='ready_release'"/>
 {% endif %}
 </div>
