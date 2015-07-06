@@ -39,7 +39,7 @@ HOST_NAME = hostname()
 
 DATABASE_ENGINE = 'mysql'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 DATABASE_NAME = 'workflow'             # Or path to database file if using sqlite3.
-if HOST_NAME == 'HZ_RD_WUSHUMING':
+if HOST_NAME == 'HZ_RD_WUSHUMING' or HOST_NAME == 'HZ_RD_SERVER':
 	DATABASE_USER = 'root'             # Not used with sqlite3.
 	DATABASE_PASSWORD = '123456'         # Not used with sqlite3.
 	DATABASE_HOST = 'hz_rd_server'             # Set to empty string for localhost. Not used with sqlite3.
@@ -180,7 +180,7 @@ def uncenter_auth(username, password):
 
 ############ log ############
 import logging
-if HOST_NAME == 'HZ_RD_WUSHUMING':
+if HOST_NAME == 'HZ_RD_WUSHUMING' or HOST_NAME == 'HZ_RD_SERVER':
 	filename = r'd:/workflow_log/workflow.log'
 else:
 	filename = r'/Users/apple/develop/workflow_log/workflow.log'

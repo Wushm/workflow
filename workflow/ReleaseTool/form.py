@@ -115,11 +115,15 @@ class CReleasToolForm(forms.Form):
         else:
             return False
         version_list = tmp_version.split('.')
-        self.fields['version_number1'].initial = version_list[0]
-        self.fields['version_number2'].initial  = version_list[1]
-        self.fields['version_number3'].initial  = version_list[2]
-        self.fields['version_number4'].initial  = version_list[3]
-        if tmp_sp == None:
+        if len(version_list) >= 1:
+            self.fields['version_number1'].initial = version_list[0]
+        if len(version_list) >= 2:
+            self.fields['version_number2'].initial = version_list[1]
+        if len(version_list) >= 3:
+            self.fields['version_number3'].initial = version_list[2]
+        if len(version_list) == 4:
+            self.fields['version_number4'].initial = version_list[3]
+        if tmp_sp is None:
             self.fields['version_number5'].initial = None
         else:
             self.fields['version_number5'].initial = '_' + tmp_sp

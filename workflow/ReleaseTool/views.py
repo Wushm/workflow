@@ -126,13 +126,13 @@ def release(request,vob_config_id,id):
                         html+='product:%s branch:%s get newest version fail!'%(product,branch) + r'<br /><br />'+ 'Please contact admin:QM Team'
                         request.user.message_set.create(message=u"ready_release")
                         break
-                count = count - 1
-            else:
-                error_message = error_message + 'no run web server'
-                
+                count = count - 1       
             if (ret == 0):
                 product.last_release_version = version
                 product.save()
+        else:
+            error_message = error_message + 'no run web server'
+
        
     return render_to_response("release.html",\
             {'title':'release version',\
