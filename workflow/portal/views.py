@@ -137,6 +137,7 @@ def login(request):
         password=password)
         if user  is not None:
             auth.login(request, user)
+            redirect_to = '/workflow/vob_config/all/'
             return HttpResponseRedirect(redirect_to)
         else:
             error_message=u"您输入的用户名或密码不正确，请使用域账户/密码登陆！"
