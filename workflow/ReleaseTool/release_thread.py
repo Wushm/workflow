@@ -71,6 +71,7 @@ class releaseThread( threading.Thread ):
                     return False
     
         cmd = r"D:\TN_version\auto_release.bat"+" "+ self.product+" " + self.branch  +" "+ self.version +" "+ self.server
+        self.message = "正在预发布版本，请稍后刷新..."
         if HOST_NAME == 'HZ_RD_SERVER':
             ret = os.system(cmd)
         else:
@@ -86,6 +87,7 @@ class releaseThread( threading.Thread ):
     def update_version(self):
         ret = 0
         cmd = "D:\TN_version\upgrade_version_no.bat"+" "+ self.product + " " + self.branch  + " " + self.version
+        self.message = "正在更新版本号，请耐心等待..."
         if HOST_NAME == 'HZ_RD_SERVER':
             ret = os.system(cmd)
         else:
@@ -104,11 +106,13 @@ class releaseThread( threading.Thread ):
             if(ret is not 0):
                 return -1
         if(self.generate_doc):
+            time.sleep(2)
             cmd = r"python D:\heavysmoker\workspace\suites\suite_version_release\release_note.py " + self.product + " " + self.branch  + " " + self.version + " " + "resolve"
+            self.message = "正在获取resolve MR，请耐心等待..."
             if HOST_NAME == 'HZ_RD_SERVER':
                 ret = os.system(cmd)
             else:
-                time.sleep(10)
+                time.sleep(2)
       
             if(ret == 0):
                 self.message = 'release_note"' + 'product:' + self.product+ ' branch:' + self.branch  + 'vresion no:' + self.version + '"' + 'resolve MR and generate release notes success!'
@@ -117,11 +121,13 @@ class releaseThread( threading.Thread ):
                 return -1
         
         if(self.upload_server):
+            time.sleep(2)
             cmd = r"D:\TN_version\upload_ftpserver.bat"+" "+self.product
+            self.message = "正在将文件上传到FTP服务器，请内心等待..."
             if HOST_NAME == 'HZ_RD_SERVER':
                 ret = os.system(cmd)
             else:
-                time.sleep(10)
+                time.sleep(2)
            
             if(ret == 0):
                 self.message = 'upload_ftpserver"' + 'product:' + self.product+ ' branch:' + self.branch  + 'vresion no:' + self.version + '"' + 'success!'
@@ -130,11 +136,13 @@ class releaseThread( threading.Thread ):
                 return -1
             
         if(self.send_mail):
+            time.sleep(2)
             cmd = r"python D:\heavysmoker\workspace\suites\suite_version_release\release_mail.py " + self.product + " " + self.branch  + " " + self.version
+            self.message = "正在发送邮件，请内心等待..."
             if HOST_NAME == 'HZ_RD_SERVER':
                 ret = os.system(cmd)
             else:
-                time.sleep(10)
+                time.sleep(2)
     
             if(ret == 0):
                 self.message = 'send_mail"' + 'product:' + self.product+ ' branch:' + self.branch  + 'vresion no:' + self.version + '"' + 'success!'
@@ -143,11 +151,13 @@ class releaseThread( threading.Thread ):
                 return -1
         
         if(self.make_lable):
+            time.sleep(2)
             cmd = r"D:\TN_version\make_label.bat"+" "+self.product + " " + self.branch  + " " + self.version+" "+ 'hz_rd_server'
+            self.message = "正在打标签，请内心等待..."
             if HOST_NAME == 'HZ_RD_SERVER':
                 ret = os.system(cmd)
             else:
-                time.sleep(10)
+                time.sleep(2)
   
             if(ret == 0):
                 self.message = 'make_lable"' + 'product:' + self.product+ ' branch:' + self.branch  + 'vresion no:' + self.version + '"' + 'success!'
