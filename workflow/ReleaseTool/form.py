@@ -105,7 +105,13 @@ class CReleasToolForm(forms.Form):
             choices=version_number4_choices)
     version_number5 = forms.ChoiceField(widget=forms.widgets.Select(attrs={}),\
             choices=version_number5_choices)
-        
+    
+    get_version = forms.BooleanField(initial = True,label="Get newest version")
+    generate_doc = forms.BooleanField(initial = True,label="Reslove MR and Generate release notes")
+    upload_server = forms.BooleanField(initial = True,label="Upload to ftp server")
+    send_mail = forms.BooleanField(initial = True,label="Send release mail")
+    make_lable = forms.BooleanField(initial = True,label="Make lable")
+    
         
     def init_version_choices(self,version):
         tmp_version = None
