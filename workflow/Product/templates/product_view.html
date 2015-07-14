@@ -11,10 +11,18 @@
 {% endblock %}
 {% block coltype %}colM{% endblock %}
 {% block bodyclass %}auth-group change-form{% endblock %}
-{% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../../../">{% trans "Home" %}</a> &rsaquo;{{title}}&rsaquo; 
-</div>{% endblock %}{% endif %}
+{% if not is_popup %}{% block breadcrumbs %}
+	<div class="breadcrumbs">
+		<a href="../../../../">{% trans "Home" %}</a> &rsaquo;
+		<a href="../../../../vob_config/all/">vob_config all</a> &rsaquo;
+		{{title}}&rsaquo; 
+	</div>
+{% endblock %}{% endif %}
 
 {% block content %}
+{% if error_message %}
+<p class="errornote">{{ error_message }}</p>
+{% endif %}
 <div id="content-main">
 	<form action="../../../../release_tool/release/{{vob_config.id}}/{{product.id}}/" method="get" id="product_form">
     <div>
