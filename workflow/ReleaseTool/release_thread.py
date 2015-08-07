@@ -67,7 +67,7 @@ class releaseThread( threading.Thread ):
         ret = 0
         if HOST_NAME == 'HZ_RD_SERVER':
             if True == IsVersionReleased(self.product,self.branch,self.version):
-                    slef.err_message = '版本已经发布成功，无法再次发布，如果需要再次发布请删除//hz_rd_server/TN_version/release_history.txt里面历史版本号'
+                    self.err_message = '版本已经发布成功，无法再次发布，如果需要再次发布请删除//hz_rd_server/TN_version/release_history.txt里面历史版本号'
                     return False
     
         cmd = r"D:\TN_version\auto_release.bat"+" "+ self.product+" " + self.branch  +" "+ self.version +" "+ self.server
